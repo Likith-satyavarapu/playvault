@@ -110,11 +110,24 @@ section { padding-block: clamp(40px, 7vw, 72px); border-top: 1px solid var(--lin
   text-decoration:none;
 }
 .plan .price del::after {
-  content:""; position:absolute; left:-3%; top:42%; width:106%; height:13px;
-  background:linear-gradient(90deg,var(--blue),var(--cyan),var(--blue));
-  clip-path:polygon(0 35%,22% 0,38% 55%,58% 10%,76% 65%,100% 30%,100% 70%,77% 100%,59% 48%,39% 100%,22% 40%,0 75%);
-  filter:drop-shadow(0 0 4px var(--cyan));
-  transform:scaleX(0); transform-origin:left;
+  content:"";
+  position:absolute;
+  left:-3%;
+  top:25%;
+  width:106%;
+  height:22px;
+
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 40'%3E%3Cpath d='M2 23 L35 17 L49 5 L65 29 L91 11 L106 20 L139 3 L130 19 L169 12 L183 32 L207 9 L224 19 L250 4 L243 20 L298 13' fill='none' stroke='%234CC9FF' stroke-width='4' stroke-linecap='square' stroke-linejoin='miter'/%3E%3C/svg%3E");
+
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+
+  filter:
+    drop-shadow(0 0 3px var(--cyan))
+    drop-shadow(0 0 7px var(--blue));
+
+  transform:scaleX(0);
+  transform-origin:left;
 }
 .plan .price strong { display:inline-block; color:var(--cyan); }
 .plans.offer-animate .price del::after {
