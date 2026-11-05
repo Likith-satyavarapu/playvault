@@ -196,6 +196,14 @@ section { padding-block: clamp(40px, 7vw, 72px); border-top: 1px solid var(--lin
 .soon .btn { border-color: #fff; color: #fff; }
 .soon .big { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: clamp(3rem, 12vw, 6.5rem); line-height: .85; text-align: right; color: rgba(255,255,255,.14); user-select: none; letter-spacing: -.03em; }
 @media (max-width: 640px) { .soon { grid-template-columns: 1fr; } .soon .big { text-align: left; } }
+  .gta-banner { position: relative; border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,.12); }
+.gta-banner img { display: block; width: 100%; height: auto; transform-origin: 0 0; will-change: transform; }
+.gta-hit { position: absolute; left: 61.5%; top: 75.5%; width: 32%; height: 9.5%; border-radius: 14px; }
+.gta-banner.pre img { transform: scale(1.75); }
+.gta-banner.play img { transform: scale(1); transition: transform 4.5s cubic-bezier(.45,0,.2,1) 1.8s; }
+.gta-banner.pre .gta-hit { visibility: hidden; }
+.gta-banner.play .gta-hit { animation: pvShow 6.3s forwards; }
+@keyframes pvShow { 0%,99% { visibility: hidden; } 100% { visibility: visible; } }
 
 /* why */
 .why { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 28px; }
@@ -316,17 +324,12 @@ footer a:hover { color: var(--fg); }
     </div>
   </section>
 
- <section id="gta6">
-    <div class="soon">
-      <div>
-        <span class="pill">Coming soon</span>
-        <h2>Be the first to play GTA 6 on PS5</h2>
-        <p>Join the waitlist and we will message you the day it lands in our library.</p>
-        <a class="btn btn-ghost" data-wa data-msg="Hi PlayVault, please add me to the GTA 6 waitlist." href="#booking">Join the waitlist <span aria-hidden="true">→</span></a>
-      </div>
-      <div class="big" aria-hidden="true">VI</div>
-    </div>
-  </section>
+<section id="gta6">
+  <div class="gta-banner">
+    <img src="images/gta6-coming-soon.png" alt="GTA 6 coming soon on PlayVault. Join the waitlist">
+    <a class="gta-hit" data-wa data-msg="Hi PlayVault, please add me to the GTA 6 waitlist." href="#booking" aria-label="Join the GTA 6 waitlist"></a>
+  </div>
+</section>
 
   <section id="why">
     <p class="eyebrow">Why choose PlayVault?</p>
@@ -437,6 +440,21 @@ if (priceSection && "IntersectionObserver" in window) {
   }, { threshold: 0.3 });
 
   priceObserver.observe(priceSection);
+}
+// GTA 6 banner intro
+var gtaBanner = document.querySelector(".gta-banner");
+if (gtaBanner && "IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  gtaBanner.classList.add("pre");
+  var gtaObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        gtaBanner.classList.remove("pre");
+        gtaBanner.classList.add("play");
+        gtaObserver.unobserve(gtaBanner);
+      }
+    });
+  }, { threshold: 0.5 });
+  gtaObserver.observe(gtaBanner);
 }</script>
 
 </body>
