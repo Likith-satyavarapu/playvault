@@ -103,6 +103,38 @@ section { padding-block: clamp(40px, 7vw, 72px); border-top: 1px solid var(--lin
 .plan .range { font-size: 13px; font-weight: 700; color: var(--cyan); background: rgba(76,201,255,.1); padding: 4px 14px; border-radius: 999px; }
 .plan .price { font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; line-height: 1; font-variant-numeric: tabular-nums; }
 .plan .price small { font-size: 1rem; font-weight: 500; color: var(--muted); }
+  /* PLAYVAULT ELECTRIC LAUNCH PRICES */
+.plan .old-price {
+  display:block; position:relative; width:max-content; margin:0 auto 7px;
+  color:var(--muted); font-size:1.05rem; line-height:1.2;
+}
+.plan .old-price::after {
+  content:""; position:absolute; left:-3%; top:42%; width:106%; height:13px;
+  background:linear-gradient(90deg,var(--blue),var(--cyan),var(--blue));
+  clip-path:polygon(0 35%,22% 0,38% 55%,58% 10%,76% 65%,100% 30%,100% 70%,77% 100%,59% 48%,39% 100%,22% 40%,0 75%);
+  filter:drop-shadow(0 0 4px var(--cyan));
+  transform:scaleX(0); transform-origin:left;
+}
+.plan .new-price { display:inline-block; color:var(--cyan); }
+.plans.offer-animate .old-price::after {
+  animation:pvLightning .55s ease-out forwards;
+}
+.plans.offer-animate .new-price {
+  animation:pvThunderGlow 1.5s ease-in-out .55s 3;
+}
+@keyframes pvLightning {
+  0% {transform:scaleX(0); opacity:0}
+  20% {opacity:1}
+  100% {transform:scaleX(1); opacity:1}
+}
+@keyframes pvThunderGlow {
+  0%,100% {text-shadow:0 0 3px var(--cyan)}
+  50% {text-shadow:0 0 8px var(--cyan),0 0 18px var(--blue),0 0 30px var(--cyan)}
+}
+@media (prefers-reduced-motion:reduce) {
+  .plans.offer-animate .old-price::after {transform:scaleX(1); opacity:1; animation:none}
+  .plans.offer-animate .new-price {animation:none; text-shadow:0 0 8px var(--cyan)}
+}
 .plan.hot { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue), 0 20px 50px -20px rgba(47,107,255,.8); background: linear-gradient(180deg, var(--surface-2), var(--surface)); }
 .plan .flag { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: var(--blue); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 16px; border-radius: 999px; white-space: nowrap; }
 .extras { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 20px; padding: 16px 22px; border: 1px dashed var(--line); border-radius: 14px; }
@@ -176,15 +208,7 @@ footer a:hover { color: var(--fg); }
 .art::before{content:"";position:absolute;inset:-5% -15%;background:radial-gradient(closest-side,rgba(47,107,255,.55),rgba(47,107,255,.15) 60%,transparent 100%);z-index:0;pointer-events:none;animation:pulse 4s ease-in-out
   infinite}
 .art img{position:relative;z-index:1;width:100%;height:auto;max-height:520px;object-fit:contain;display:block}
-/* PLAYVAULT PREMIUM LAUNCH OFFER */
-.plan .price { display:flex; flex-direction:column; align-items:center; gap:9px; }
-.plan .price del { font:700 1.1rem var(--font-body); color:#ff6868; position:relative; text-decoration:none; }
-.plan .price del:after { content:""; position:absolute; left:0; top:50%; height:3px; width:100%; background:#ff4545; transform:scaleX(0); transform-origin:left; animation:pvStrike .7s ease .7s forwards; }
-.plan .price strong { display:inline-block; color:#55ffad; opacity:0; text-shadow:0 0 18px #20e88b; animation:pvReveal .7s cubic-bezier(.2,1.5,.5,1) 1.3s forwards; }
-.limited { display:inline-block; padding:5px 12px; border:1px solid #ffbd55; border-radius:30px; color:#ffbd55; font-size:10px; font-weight:800; letter-spacing:1px; background:#ffbd5515; box-shadow:0 0 14px #ffbd5540; animation:pvGlow 1.5s infinite alternate; }
-@keyframes pvStrike { to { transform:scaleX(1); } }
-@keyframes pvReveal { from { opacity:0; transform:translateY(15px) scale(.8); } to { opacity:1; transform:translateY(0) scale(1); } }
-@keyframes pvGlow { to { box-shadow:0 0 22px #ffbd5590; } }</style>
+</style>
 </head>
 <body>
 <header class="top">
@@ -233,9 +257,9 @@ footer a:hover { color: var(--fg); }
       </div>
       <div>
         <div class="plans">
-         <div class="plan"><span class="range">1–2 Days</span><div class="price"><del>₹1,000</del><strong>₹899<small> /day</small></strong></div><span class="limited">⚡ LIMITED PERIOD OFFER</span><p class="muted">Short &amp; sweet</p></div>
-<div class="plan hot"><span class="flag">Most popular</span><span class="range">3–6 Days</span><div class="price"><del>₹800</del><strong>₹699<small> /day</small></strong></div><span class="limited">⚡ LIMITED PERIOD OFFER</span><p class="muted">Play more, save more</p></div>
-<div class="plan"><span class="range">7+ Days</span><div class="price"><del>₹600</del><strong>₹499<small> /day</small></strong></div><span class="limited">⚡ LIMITED PERIOD OFFER</span><p class="muted">Longer fun awaits</p></div>
+         <div class="plan"><span class="range">1–2 Days</span><div class="price"><del>₹1,200</del><strong>₹899<small> /day</small></strong></div><span class="limited">⚡ LIMITED PERIOD OFFER</span><p class="muted">Short &amp; sweet</p></div>
+<div class="plan hot"><span class="flag">Most popular</span><span class="range">3–6 Days</span><div class="price"><del>₹900</del><strong>₹699<small> /day</small></strong></div><span class="limited">⚡ LIMITED PERIOD OFFER</span><p class="muted">Play more, save more</p></div>
+<div class="plan"><span class="range">7+ Days</span><div class="price"><del>₹700</del><strong>₹499<small> /day</small></strong></div><span class="limited">⚡ LIMITED PERIOD OFFER</span><p class="muted">Longer fun awaits</p></div>
         </div>
         <div class="extras"><strong>Add extras</strong><span>Extra controller <b>₹150</b> <span class="muted">/day</span></span></div>
       </div>
@@ -332,7 +356,7 @@ footer a:hover { color: var(--fg); }
 
 <script>
   // Replace with your WhatsApp number: country code + number, digits only (e.g. 919876543210).
-  var WA_NUMBER = "91XXXXXXXXXX";
+  var WA_NUMBER = "917386841418";
   var waBase = "https://wa.me/" + WA_NUMBER + "?text=";
 
   document.querySelectorAll("[data-wa]").forEach(function (a) {
@@ -376,7 +400,21 @@ footer a:hover { color: var(--fg); }
     }, { rootMargin: "-40% 0px -55% 0px" });
     ["top", "plans", "games", "booking", "contact"].forEach(function (id) { var el = document.getElementById(id); if (el) io.observe(el); });
   }
-</script>
+// Trigger launch-price lightning when pricing enters view
+var priceSection = document.querySelector(".plans");
+
+if (priceSection && "IntersectionObserver" in window) {
+  var priceObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        priceSection.classList.add("offer-animate");
+        priceObserver.unobserve(priceSection);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  priceObserver.observe(priceSection);
+}</script>
 
 </body>
 </html>
