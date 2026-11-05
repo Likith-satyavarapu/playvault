@@ -200,9 +200,9 @@ section { padding-block: clamp(40px, 7vw, 72px); border-top: 1px solid var(--lin
 .gta-banner img { display: block; width: 100%; height: auto; transform-origin: 0 0; will-change: transform; }
 .gta-hit { position: absolute; left: 61.5%; top: 75.5%; width: 32%; height: 9.5%; border-radius: 14px; }
 .gta-banner.pre img { transform: scale(1.75); }
-.gta-banner.play img { transform: scale(1); transition: transform 4.5s cubic-bezier(.45,0,.2,1) 1.8s; }
+.gta-banner.play img { transform: scale(1); transition: transform 2.5s cubic-bezier(.45,0,.2,1) .8s; }
 .gta-banner.pre .gta-hit { visibility: hidden; }
-.gta-banner.play .gta-hit { animation: pvShow 6.3s forwards; }
+.gta-banner.play .gta-hit { animation: pvShow 3.3s forwards; }
 @keyframes pvShow { 0%,99% { visibility: hidden; } 100% { visibility: visible; } }
 
 /* why */
@@ -455,7 +455,15 @@ if (gtaBanner && "IntersectionObserver" in window && !window.matchMedia("(prefer
     });
   }, { threshold: 0.5 });
   gtaObserver.observe(gtaBanner);
-}</script>
+}
+// GTA 6 menu link scroll
+document.querySelectorAll('a[href="#gta6"]').forEach(function (link) {
+  link.addEventListener("click", function (e) {
+    e.preventDefault();
+    var target = document.getElementById("gta6");
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+});</script>
 
 </body>
 </html>
