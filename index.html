@@ -104,22 +104,23 @@ section { padding-block: clamp(40px, 7vw, 72px); border-top: 1px solid var(--lin
 .plan .price { font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; line-height: 1; font-variant-numeric: tabular-nums; }
 .plan .price small { font-size: 1rem; font-weight: 500; color: var(--muted); }
   /* PLAYVAULT ELECTRIC LAUNCH PRICES */
-.plan .old-price {
+.plan .price del {
   display:block; position:relative; width:max-content; margin:0 auto 7px;
   color:var(--muted); font-size:1.05rem; line-height:1.2;
+  text-decoration:none;
 }
-.plan .old-price::after {
+.plan .price del::after {
   content:""; position:absolute; left:-3%; top:42%; width:106%; height:13px;
   background:linear-gradient(90deg,var(--blue),var(--cyan),var(--blue));
   clip-path:polygon(0 35%,22% 0,38% 55%,58% 10%,76% 65%,100% 30%,100% 70%,77% 100%,59% 48%,39% 100%,22% 40%,0 75%);
   filter:drop-shadow(0 0 4px var(--cyan));
   transform:scaleX(0); transform-origin:left;
 }
-.plan .new-price { display:inline-block; color:var(--cyan); }
-.plans.offer-animate .old-price::after {
+.plan .price strong { display:inline-block; color:var(--cyan); }
+.plans.offer-animate .price del::after {
   animation:pvLightning .55s ease-out forwards;
 }
-.plans.offer-animate .new-price {
+.plans.offer-animate .price strong {
   animation:pvThunderGlow 1.5s ease-in-out .55s 3;
 }
 @keyframes pvLightning {
@@ -132,8 +133,8 @@ section { padding-block: clamp(40px, 7vw, 72px); border-top: 1px solid var(--lin
   50% {text-shadow:0 0 8px var(--cyan),0 0 18px var(--blue),0 0 30px var(--cyan)}
 }
 @media (prefers-reduced-motion:reduce) {
-  .plans.offer-animate .old-price::after {transform:scaleX(1); opacity:1; animation:none}
-  .plans.offer-animate .new-price {animation:none; text-shadow:0 0 8px var(--cyan)}
+  .plans.offer-animate .price del::after {transform:scaleX(1); opacity:1; animation:none}
+  .plans.offer-animate .price strong {animation:none; text-shadow:0 0 8px var(--cyan)}
 }
 .plan.hot { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue), 0 20px 50px -20px rgba(47,107,255,.8); background: linear-gradient(180deg, var(--surface-2), var(--surface)); }
 .plan .flag { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: var(--blue); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 16px; border-radius: 999px; white-space: nowrap; }
