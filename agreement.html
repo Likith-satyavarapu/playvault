@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="PlayVault Form">
+<style>html{-webkit-text-size-adjust:100%}body{margin:0}</style>
+<title>PlayVault Rental Form</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap">
+<style>
+/* Layout: one centred column of section cards, sticky action bar at the bottom, off-screen A4 sheet used only to build the PDF.
+   Palette: navy ink, signal blue accent, cool-tinted neutrals. Type: Space Grotesk for titles, Inter for everything else. */
+:root {
+  --bg: #F2F5FB; --surface: #FFFFFF; --fg: #0E1629; --muted: #566178; --line: #D3DBEC;
+  --accent: #2563EB; --accent-fg: #FFFFFF; --navy: #0B1426; --field: #F7F9FE; --ok: #0E7C47; --warn: #B4570A;
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A0F1E; --surface: #121A2E; --fg: #E8ECF6; --muted: #98A3BC; --line: #26314C;
+    --accent: #6C9CFF; --accent-fg: #07101F; --navy: #060A15; --field: #0E1527; --ok: #4FD08D; --warn: #F0A25C;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A0F1E; --surface: #121A2E; --fg: #E8ECF6; --muted: #98A3BC; --line: #26314C;
+  --accent: #6C9CFF; --accent-fg: #07101F; --navy: #060A15; --field: #0E1527; --ok: #4FD08D; --warn: #F0A25C;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 110px;
+}
+.wrap { max-width: 660px; margin: 0 auto; }
+.hero { text-align: center; padding: 28px 0 8px; }
+.hero h1 { font-family: var(--font-display); font-size: 30px; letter-spacing: .04em; margin: 0; color: var(--fg); }
+.hero .tag { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .12em; margin-top: 4px; text-transform: uppercase; }
+.hero .sub { color: var(--muted); font-size: 14px; margin: 14px auto 0; max-width: 46ch; text-wrap: balance; }
+section.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-top: 16px; }
+section.card > h2 { font-family: var(--font-display); font-size: 16px; margin: 0 0 14px; letter-spacing: .02em; text-transform: uppercase; color: var(--fg); }
+.grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.fld { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.fld.full { grid-column: 1 / -1; }
+.fld > label, .lab { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .02em; }
+input[type=text], input[type=tel], input[type=email], input[type=number], input[type=datetime-local], select, textarea {
+  width: 100%; font: inherit; font-size: 16px; color: var(--fg); background: var(--field); border: 1px solid var(--line);
+  border-radius: 8px; padding: 10px 11px; min-height: 44px; min-width: 0; appearance: none; -webkit-appearance: none;
+}
+select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 19px, calc(100% - 13px) 19px; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 32px; }
+textarea { min-height: 78px; resize: vertical; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, .seg input:focus-visible + span, .tick input:focus-visible + span {
+  outline: 2px solid var(--accent); outline-offset: 1px;
+}
+.item { border: 1px solid var(--line); border-radius: 10px; padding: 12px; background: var(--field); }
+.item + .item { margin-top: 10px; }
+.item .name { font-weight: 700; font-size: 14px; margin-bottom: 10px; }
+.item .grid { grid-template-columns: 70px 1fr; }
+.item .grid .fld.wide { grid-column: 1 / -1; }
+.tick { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.tick input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.tick span.box { width: 26px; height: 26px; border: 2px solid var(--muted); border-radius: 6px; background: var(--surface); display: inline-grid; place-items: center; flex: none; }
+.tick input:checked + span.box { background: var(--accent); border-color: var(--accent); }
+.tick input:checked + span.box::after { content: ""; width: 7px; height: 13px; border: solid var(--accent-fg); border-width: 0 3px 3px 0; transform: rotate(45deg) translate(-1px, -1px); }
+.chk { display: grid; gap: 8px; }
+.chkrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.chkrow:last-child { border-bottom: 0; }
+.chkrow .t { font-size: 14px; flex: 1; min-width: 0; }
+.segs { display: inline-flex; gap: 6px; flex: none; }
+.seg { cursor: pointer; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg span { display: inline-grid; place-items: center; min-width: 58px; min-height: 40px; padding: 0 12px; border: 1.5px solid var(--line); border-radius: 8px; font-weight: 600; font-size: 14px; background: var(--field); color: var(--muted); }
+.seg input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.sub2 { font-weight: 700; font-size: 13px; margin: 14px 0 4px; color: var(--accent); text-transform: uppercase; letter-spacing: .06em; }
+details.terms { border: 1px solid var(--line); border-radius: 10px; padding: 0 12px; background: var(--field); }
+details.terms summary { min-height: 46px; display: flex; align-items: center; font-weight: 600; cursor: pointer; }
+details.terms ol { margin: 0 0 12px; padding-left: 20px; display: grid; gap: 8px; font-size: 13.5px; color: var(--fg); }
+.decl { font-size: 14px; margin: 14px 0; }
+.sigbox { display: flex; flex-direction: column; gap: 6px; }
+.pad { width: 100%; height: 140px; border: 1.5px dashed var(--muted); border-radius: 10px; background: var(--field); touch-action: none; display: block; }
+.padbar { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); }
+button { font: inherit; cursor: pointer; }
+.link { background: none; border: 0; color: var(--accent); font-weight: 600; font-size: 13px; padding: 8px 0; min-height: 36px; }
+.bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface); border-top: 1px solid var(--line);
+  padding: 10px max(16px, env(safe-area-inset-left, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-right, 0px)); z-index: 5; }
+.bar .in { max-width: 660px; margin: 0 auto; display: flex; gap: 10px; }
+.btn { flex: 1; min-height: 48px; border-radius: 10px; font-weight: 700; font-size: 15px; border: 1.5px solid var(--line); background: var(--field); color: var(--fg); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); flex: 2; }
+.btn:disabled { opacity: .55; cursor: default; }
+#status { margin-top: 16px; font-size: 14px; min-height: 20px; }
+#status.err { color: var(--warn); } #status.ok { color: var(--ok); }
+#preview { margin-top: 12px; display: grid; gap: 12px; }
+#preview img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; background: #fff; display: block; }
+#sheetwrap { position: fixed; left: 0; top: 0; width: 794px; opacity: 0; pointer-events: none; z-index: -1; }
+
+/* ---- A4 sheet (always light, built for the PDF) ---- */
+.pg { width: 794px; height: 1123px; background: #fff; color: #1B2333; font: 400 11.5px/1.35 Inter, Arial, sans-serif; position: relative; overflow: hidden; padding: 0 38px; }
+.pg .band { position: absolute; left: 0; right: 0; top: 0; height: 18px; background: #0B1426; }
+.pg .ttl { text-align: center; padding-top: 34px; font: 800 30px/1 "Space Grotesk", Inter, sans-serif; letter-spacing: .04em; color: #0B1426; }
+.pg .tg { text-align: center; color: #2563EB; font-weight: 700; font-size: 9.5px; letter-spacing: .12em; margin-top: 7px; }
+.pg .agr { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; }
+.pg .agr b { font: 700 15px "Space Grotesk", Inter, sans-serif; color: #0B1426; letter-spacing: .02em; }
+.pg .intro { margin: 8px 0 14px; font-size: 11px; }
+.pg h3 { font: 700 12.5px "Space Grotesk", Inter, sans-serif; color: #0B1426; margin: 16px 0 8px; display: flex; align-items: center; gap: 8px; letter-spacing: .02em; }
+.pg h3::before { content: ""; width: 4px; height: 15px; background: #2563EB; display: block; }
+.pg .tb { display: grid; border-top: 1px solid #C5D0E6; border-left: 1px solid #C5D0E6; }
+.pg .tb > div { border-right: 1px solid #C5D0E6; border-bottom: 1px solid #C5D0E6; padding: 5px 8px; min-height: 33px; display: flex; align-items: center; min-width: 0; overflow-wrap: anywhere; }
+.pg .tb > .l { background: #F1F4FB; font-weight: 700; font-size: 10px; color: #0B1426; }
+.pg .tb > .v { font-size: 11.5px; white-space: pre-wrap; }
+.pg .r2 { grid-template-columns: 128px 1fr 128px 1fr; }
+.pg .r1 { grid-template-columns: 128px 1fr; }
+.pg .eq { grid-template-columns: 190px 44px 130px 1fr 78px; }
+.pg .eq > .c { justify-content: center; }
+.pg .ck { grid-template-columns: 1fr 1fr; }
+.pg .ck > .l { font-size: 11px; }
+.pg .ckc { gap: 8px; }
+.pg .ckc .t { flex: 1; }
+.pg .cb { width: 12px; height: 12px; border: 1.3px solid #6B7A99; display: inline-grid; place-items: center; vertical-align: middle; margin: 0 4px 0 2px; }
+.pg .cb.on { background: #2563EB; border-color: #2563EB; }
+.pg .cb.on::after { content: ""; width: 3px; height: 7px; border: solid #fff; border-width: 0 1.6px 1.6px 0; transform: rotate(45deg) translate(-.5px, -.5px); }
+.pg .cap { font-size: 10px; color: #566178; margin: 12px 0 4px; }
+.pg .ft { position: absolute; left: 38px; right: 38px; bottom: 28px; border-top: 1px solid #C5D0E6; padding-top: 8px; display: flex; justify-content: space-between; font-size: 9.5px; color: #566178; }
+.pg ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 7px; font-size: 11px; line-height: 1.42; }
+.pg .sg { height: 56px; max-width: 100%; display: block; }
+.pg .run { display: flex; justify-content: space-between; padding-top: 34px; font-size: 11px; color: #566178; }
+.pg .run b { color: #0B1426; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>PLAYVAULT</h1>
+    <div class="tag">Game on. Anywhere. &nbsp;·&nbsp; PS5 gaming rentals &nbsp;·&nbsp; Visakhapatnam</div>
+    <p class="sub">Fill in the rental agreement on your phone, add both signatures with a finger, then create the PDF to send to the customer.</p>
+  </header>
+  <form id="form" autocomplete="off" onsubmit="return false"><div id="ui"></div></form>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div id="preview"></div>
+</div>
+<div class="bar"><div class="in">
+  <button class="btn" id="clearBtn" type="button">Clear form</button>
+  <button class="btn primary" id="makeBtn" type="button">Create PDF</button>
+</div></div>
+<div id="sheetwrap" aria-hidden="true"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function () {
+  var WHATSAPP = "9666880474", SITE = "playvaultvizag.shop", INSTA = "@Playvault.vsp";
+  var TERMS = [
+    ["Ownership", "The console and accessories remain the property of PlayVault. The customer must return all issued items by the agreed due date and time."],
+    ["Care and use", "Keep the equipment in a safe, dry, ventilated place. Do not open, modify, jailbreak, repair, or tamper with the console or controller."],
+    ["No transfer", "Do not lend, transfer, sell, pledge, or sub-rent the equipment to any other person."],
+    ["Damage or loss", "The customer is responsible for loss, theft, or damage beyond normal wear and tear during the rental period, based on a reasonable assessment and the supporting repair or replacement cost. Loss or theft must be reported to PlayVault immediately."],
+    ["Technical issues", "Report any issue to PlayVault promptly and do not attempt unauthorized repairs. PlayVault will provide the console in working condition at handover."],
+    ["Late return / extension", "Request any extension before the due time. An extension is valid only after PlayVault confirms it and the additional charge is agreed. Late returns are charged the late fee per day stated in Section 2, which the customer agrees to before handover."],
+    ["Payment and deposit", "Rental charges are payable as agreed at booking. The security deposit is refunded after the equipment is returned and inspected. Any deduction for outstanding charges, damage, or missing items will be explained to the customer."],
+    ["Customer setup", "The customer is responsible for a compatible TV, power supply, and internet connection unless otherwise agreed in writing."],
+    ["Cancellation", "Cancellation, rescheduling, and refund terms are those communicated and accepted at the time of booking."],
+    ["Accounts and data", "If the customer signs in with a personal PlayStation account, they must sign out and remove their account and personal data from the console before returning it. PlayVault is not responsible for any data, purchases, or account activity on the console."],
+    ["Age and ID", "The customer confirms they are 18 years or older and that the contact and ID details given in this agreement are genuine."],
+    ["Disputes", "Any dispute arising from this rental will first be resolved by discussion. If that fails, it falls under the courts of Visakhapatnam, Andhra Pradesh."]
+  ];
+  var DECL = "I confirm that I have received the equipment listed above, had the opportunity to check its condition, and agree to the terms in this agreement. I confirm that the details I provided are accurate.";
+  var ID_TYPES = ["Aadhaar", "Driving licence", "Voter ID", "Passport", "College / office ID", "Other"];
+  var DURATIONS = [["1 day", 1], ["2 days", 2], ["3 days", 3], ["1 week", 7], ["2 weeks", 14], ["1 month", 30]];
+  var PAYS = ["Cash", "UPI", "Card", "Bank transfer", "Other"];
+  var ITEMS = [["ps5", "PS5 console + power cable", 1], ["ctrl", "DualSense controller", 1], ["hdmi", "HDMI cable", 1], ["o1", "", 0], ["o2", "", 0]];
+  var HO = [["ho_console", "Console tested"], ["ho_ctrl", "Controller tested"], ["ho_photos", "Photos taken"], ["ho_items", "Items match list above"]];
+  var RT = [["rt_console", "Console tested"], ["rt_ctrl", "Controller tested"], ["rt_items", "All items received"], ["rt_photos", "Photos taken"]];
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+  function localStr(d) { return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()) + "T" + pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
+  function fmt(v) {
+    if (!v) return "";
+    var d = new Date(v); if (isNaN(d)) return v;
+    return d.toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "2-digit", hour12: true });
+  }
+  function rs(v) { return v === "" || v == null ? "" : "₹ " + v; }
+
+  function f(id, label, type, extra) {
+    extra = extra || {};
+    var cls = "fld" + (extra.full ? " full" : "");
+    var inner;
+    if (type === "select") {
+      inner = '<select id="' + id + '"><option value="">Select…</option>' + extra.opts.map(function (o) { return "<option>" + esc(o) + "</option>"; }).join("") + "</select>";
+    } else if (type === "textarea") {
+      inner = '<textarea id="' + id + '" rows="3"></textarea>';
+    } else {
+      inner = '<input id="' + id + '" type="' + type + '"' + (extra.mode ? ' inputmode="' + extra.mode + '"' : "") + (extra.ph ? ' placeholder="' + esc(extra.ph) + '"' : "") + ">";
+    }
+    return '<div class="' + cls + '"><label for="' + id + '">' + esc(label) + "</label>" + inner + "</div>";
+  }
+  function yn(key, label) {
+    return '<div class="chkrow"><span class="t">' + esc(label) + '</span><span class="segs">' +
+      '<label class="seg"><input type="radio" name="' + key + '" id="' + key + '_yes" value="Yes"><span>Yes</span></label>' +
+      '<label class="seg"><input type="radio" name="' + key + '" id="' + key + '_no" value="No"><span>No</span></label></span></div>';
+  }
+
+  var pads = {};
+  function render() {
+    var h = "";
+    h += '<section class="card"><h2>Agreement</h2><div class="grid">' + f("agr", "Agreement no.", "text") + "</div></section>";
+    h += '<section class="card"><h2>1. Customer details</h2><div class="grid">' +
+      f("name", "Customer full name", "text") + f("mobile", "Mobile number", "tel", { mode: "tel" }) +
+      f("alt", "Alternate contact (name & number)", "text") + f("email", "Email (optional)", "email") +
+      f("address", "Address", "textarea", { full: true }) +
+      f("idtype", "ID proof type (optional)", "select", { opts: ID_TYPES }) + f("idref", "Last 4 characters / reference", "text") +
+      "</div></section>";
+    h += '<section class="card"><h2>2. Rental &amp; payment</h2><div class="grid">' +
+      f("start", "Rental start date & time", "datetime-local") + f("duration", "Rental duration", "select", { opts: DURATIONS.map(function (d) { return d[0]; }) }) +
+      f("due", "Return due date & time", "datetime-local") + f("charge", "Rental charge (₹)", "number", { mode: "decimal" }) +
+      f("deposit", "Security deposit (₹)", "number", { mode: "decimal" }) + f("paymethod", "Payment method", "select", { opts: PAYS }) +
+      f("payref", "Payment reference / UPI txn ID", "text") + f("latefee", "Late fee per day (₹)", "number", { mode: "decimal" }) +
+      "</div></section>";
+    h += '<section class="card"><h2>Equipment issued</h2>';
+    ITEMS.forEach(function (it) {
+      var k = it[0];
+      h += '<div class="item"><div class="name">' + (it[1] ? esc(it[1]) : "Other item " + (k === "o1" ? "1" : "2")) + "</div><div class=\"grid\">" +
+        (it[1] ? "" : '<div class="fld wide"><label for="item_' + k + '">Item name</label><input id="item_' + k + '" type="text"></div>') +
+        '<div class="fld"><label for="qty_' + k + '">Qty</label><input id="qty_' + k + '" type="number" inputmode="numeric"></div>' +
+        '<div class="fld"><label for="serial_' + k + '">Serial no. / ID</label><input id="serial_' + k + '" type="text"></div>' +
+        '<div class="fld wide"><label for="cond_' + k + '">Condition / notes</label><input id="cond_' + k + '" type="text"></div>' +
+        '<div class="fld wide"><label class="tick"><input type="checkbox" id="ret_' + k + '"><span class="box"></span><span>Returned</span></label></div>' +
+        "</div></div>";
+    });
+    h += "</section>";
+    h += '<section class="card"><h2>3. Handover &amp; return check</h2><div class="sub2" style="margin-top:0">At handover</div><div class="chk">' +
+      HO.map(function (x) { return yn(x[0], x[1]); }).join("") + '</div><div class="sub2">At return</div><div class="chk">' +
+      RT.map(function (x) { return yn(x[0], x[1]); }).join("") + '</div><div class="grid" style="margin-top:14px">' +
+      f("notes", "Notes / damage found (if any)", "textarea", { full: true }) + "</div></section>";
+    h += '<section class="card"><h2>4. Terms &amp; responsibilities</h2><details class="terms"><summary>Read the 12 terms</summary><ol>' +
+      TERMS.map(function (t) { return "<li><b>" + esc(t[0]) + ":</b> " + esc(t[1]) + "</li>"; }).join("") + "</ol></details></section>";
+    h += '<section class="card"><h2>5. Declaration &amp; signatures</h2><p class="decl">' + esc(DECL) + "</p>" +
+      '<div class="sub2" style="margin-top:0">Customer</div><div class="grid">' + f("cname", "Name", "text") + f("cdt", "Date & time", "datetime-local") + "</div>" +
+      '<div class="sigbox" style="margin-top:12px"><span class="lab">Customer signature (sign with your finger)</span><canvas class="pad" id="pad_c"></canvas>' +
+      '<div class="padbar"><span>Sign inside the box</span><button class="link" type="button" data-clear="pad_c">Clear signature</button></div></div>' +
+      '<div class="sub2">PlayVault representative</div><div class="grid">' + f("rname", "Name", "text") + f("rdt", "Date & time", "datetime-local") + "</div>" +
+      '<div class="sigbox" style="margin-top:12px"><span class="lab">PlayVault signature</span><canvas class="pad" id="pad_r"></canvas>' +
+      '<div class="padbar"><span>Sign inside the box</span><button class="link" type="button" data-clear="pad_r">Clear signature</button></div></div>' +
+      "</section>";
+    $("ui").innerHTML = h;
+
+    var now = new Date();
+    $("agr").value = "PV-" + String(now.getFullYear()).slice(2) + pad2(now.getMonth() + 1) + pad2(now.getDate()) + "-" + (100 + Math.floor(Math.random() * 900));
+    $("start").value = localStr(now); $("cdt").value = localStr(now); $("rdt").value = localStr(now);
+    ITEMS.forEach(function (it) { if (it[1]) $("qty_" + it[0]).value = "1"; });
+
+    function setDue() {
+      var d = DURATIONS.filter(function (x) { return x[0] === $("duration").value; })[0];
+      var s = $("start").value; if (!d || !s) return;
+      var dt = new Date(s); dt.setDate(dt.getDate() + d[1]); $("due").value = localStr(dt);
+    }
+    $("duration").addEventListener("change", setDue); $("start").addEventListener("change", setDue);
+
+    document.querySelectorAll(".seg input").forEach(function (r) {
+      r.addEventListener("click", function () {
+        if (r.dataset.was === "1") { r.checked = false; r.dataset.was = ""; return; }
+        document.querySelectorAll('input[name="' + r.name + '"]').forEach(function (o) { o.dataset.was = ""; });
+        r.dataset.was = "1";
+      });
+    });
+    pads = { pad_c: makePad($("pad_c")), pad_r: makePad($("pad_r")) };
+    document.querySelectorAll("[data-clear]").forEach(function (b) { b.addEventListener("click", function () { pads[b.dataset.clear].clear(); }); });
+    $("preview").innerHTML = ""; setStatus("", "");
+    lastBlob = null; $("makeBtn").textContent = "Create PDF";
+  }
+
+  function makePad(cv) {
+    var ctx, ink = false, down = false, dpr = Math.max(1, window.devicePixelRatio || 1);
+    function size() { var r = cv.getBoundingClientRect(); cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); ctx = cv.getContext("2d"); ctx.scale(dpr, dpr); ctx.lineWidth = 2.4; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#0B1426"; }
+    size();
+    function pt(e) { var r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+    cv.addEventListener("pointerdown", function (e) { down = true; cv.setPointerCapture(e.pointerId); var p = pt(e); ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(p[0] + .1, p[1] + .1); ctx.stroke(); ink = true; e.preventDefault(); });
+    cv.addEventListener("pointermove", function (e) { if (!down) return; var p = pt(e); ctx.lineTo(p[0], p[1]); ctx.stroke(); e.preventDefault(); });
+    function up() { down = false; }
+    cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", up);
+    return {
+      clear: function () { ctx.clearRect(0, 0, cv.width, cv.height); ink = false; },
+      has: function () { return ink; },
+      url: function () { return ink ? cv.toDataURL("image/png") : ""; }
+    };
+  }
+
+  function setStatus(msg, cls) { var s = $("status"); s.textContent = msg; s.className = cls || ""; }
+  function v(id) { return $(id) ? $(id).value.trim() : ""; }
+  function picked(key) { var r = document.querySelector('input[name="' + key + '"]:checked'); return r ? r.value : ""; }
+  function cb(on) { return '<span class="cb' + (on ? " on" : "") + '"></span>'; }
+  function foot(n) { return '<div class="ft"><span>PLAYVAULT &nbsp;•&nbsp; WhatsApp: ' + WHATSAPP + " &nbsp;•&nbsp; " + SITE + " &nbsp;•&nbsp; " + INSTA + "</span><span>Page " + n + " of 2</span></div>"; }
+  function r2(l1, v1, l2, v2) { return '<div class="tb r2"><div class="l">' + l1 + '</div><div class="v">' + esc(v1) + '</div><div class="l">' + l2 + '</div><div class="v">' + esc(v2) + "</div></div>"; }
+
+  function page1() {
+    var h = '<div class="pg"><div class="band"></div><div class="ttl">PLAYVAULT</div><div class="tg">GAME ON. ANYWHERE. &nbsp;|&nbsp; PS5 GAMING RENTALS &nbsp;•&nbsp; VISAKHAPATNAM</div>' +
+      '<div class="agr"><b>PS5 RENTAL AGREEMENT</b><span>Agreement no. <b style="font-size:12px">' + esc(v("agr")) + "</b></span></div>" +
+      '<div class="intro">This agreement records the rental of the PlayStation 5 console and the accessories listed below. Please complete all fields before handover.</div>';
+    h += "<h3>1. CUSTOMER DETAILS</h3>" + r2("Customer full name", v("name"), "Mobile number", v("mobile")) +
+      r2("Alternate contact (name &amp; number)", v("alt"), "Email (optional)", v("email")) +
+      '<div class="tb r1"><div class="l" style="min-height:52px">Address</div><div class="v">' + esc(v("address")) + "</div></div>" +
+      r2("ID proof type (optional)", v("idtype"), "Last 4 characters / reference", v("idref"));
+    h += "<h3>2. RENTAL &amp; PAYMENT DETAILS</h3>" + r2("Rental start date &amp; time", fmt(v("start")), "Return due date &amp; time", fmt(v("due"))) +
+      r2("Rental duration", v("duration"), "Rental charge (₹)", rs(v("charge"))) +
+      r2("Security deposit (₹)", rs(v("deposit")), "Payment method", v("paymethod")) +
+      r2("Payment reference / UPI txn ID", v("payref"), "Late fee per day (₹)", rs(v("latefee")));
+    h += '<div class="cap">Equipment issued (tick the box when returned and record condition)</div><div class="tb eq"><div class="l">Item</div><div class="l">Qty</div><div class="l">Serial no. / ID</div><div class="l">Condition / notes</div><div class="l c">Returned</div>';
+    ITEMS.forEach(function (it) {
+      var k = it[0], nm = it[1] || v("item_" + k);
+      h += '<div class="v">' + esc(nm) + '</div><div class="v c">' + esc(v("qty_" + k)) + '</div><div class="v">' + esc(v("serial_" + k)) + '</div><div class="v">' + esc(v("cond_" + k)) + '</div><div class="c">' + cb($("ret_" + k).checked) + "</div>";
+    });
+    h += "</div><h3>3. HANDOVER &amp; RETURN CHECK</h3>";
+    h += '<div class="tb ck"><div class="l">At handover</div><div class="l">At return</div>';
+    for (var i = 0; i < 4; i++) {
+      [HO[i], RT[i]].forEach(function (x) {
+        var a = picked(x[0]);
+        h += '<div class="ckc"><span class="t">' + esc(x[1]) + "</span><span>" + cb(a === "Yes") + "Yes</span><span>" + cb(a === "No") + "No</span></div>";
+      });
+    }
+    h += "</div>";
+    h += '<div class="tb r1"><div class="l" style="min-height:44px">Notes / damage found (if any)</div><div class="v">' + esc(v("notes")) + "</div></div>";
+    return h + foot(1) + "</div>";
+  }
+
+  function page2() {
+    var h = '<div class="pg"><div class="band"></div><div class="run"><b>PLAYVAULT &nbsp;•&nbsp; PS5 RENTAL AGREEMENT</b><span>Agreement no. ' + esc(v("agr")) + "</span></div>" +
+      "<h3>4. RENTAL TERMS &amp; CUSTOMER RESPONSIBILITIES</h3><ol>" +
+      TERMS.map(function (t, i) { return "<li>" + (i + 1) + ". <b>" + esc(t[0]) + ":</b> " + esc(t[1]) + "</li>"; }).join("") + "</ol>" +
+      "<h3>5. CUSTOMER DECLARATION &amp; SIGNATURES</h3><div class=\"intro\" style=\"margin-top:0\">" + esc(DECL) + "</div>";
+    var sc = pads.pad_c.url(), sr = pads.pad_r.url();
+    h += '<div class="tb r2"><div class="l" style="min-height:70px">Customer signature</div><div class="v" style="min-height:70px">' + (sc ? '<img class="sg" src="' + sc + '">' : "") +
+      '</div><div class="l">PlayVault representative signature</div><div class="v">' + (sr ? '<img class="sg" src="' + sr + '">' : "") + "</div></div>" +
+      r2("Name", v("cname"), "Name", v("rname")) + r2("Date &amp; time", fmt(v("cdt")), "Date &amp; time", fmt(v("rdt"))) +
+      '<div class="cap" style="margin-top:14px">Keep one signed copy for the customer and one for PlayVault.</div>';
+    return h + foot(2) + "</div>";
+  }
+
+  var lastBlob = null, lastName = "";
+  function slug(s) { return s.replace(/[^A-Za-z0-9]+/g, "_").replace(/^_|_$/g, "").slice(0, 40); }
+
+  async function capture(html) {
+    var w = $("sheetwrap"); w.innerHTML = html;
+    var cv = await html2canvas(w.firstElementChild, {
+      scale: 2, backgroundColor: "#ffffff", logging: false, useCORS: true, width: 794, height: 1123, windowWidth: 794,
+      onclone: function (d) { var x = d.getElementById("sheetwrap"); if (x) { x.style.opacity = "1"; } }
+    });
+    w.innerHTML = "";
+    return cv.toDataURL("image/jpeg", 0.92);
+  }
+
+  async function make() {
+    if (!v("name") || !v("mobile")) {
+      setStatus("Add the customer's name and mobile number first.", "err");
+      (v("name") ? $("mobile") : $("name")).scrollIntoView({ block: "center", behavior: "smooth" }); (v("name") ? $("mobile") : $("name")).focus();
+      return;
+    }
+    var btn = $("makeBtn"); btn.disabled = true; btn.textContent = "Creating…"; setStatus("Creating the PDF…", "");
+    try {
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      var imgs = [await capture(page1()), await capture(page2())];
+      var pdf = new window.jspdf.jsPDF({ unit: "mm", format: "a4", compress: true });
+      imgs.forEach(function (u, i) { if (i) pdf.addPage(); pdf.addImage(u, "JPEG", 0, 0, 210, 297); });
+      lastBlob = pdf.output("blob"); lastName = "PlayVault_Rental_" + (slug(v("name")) || "Agreement") + ".pdf";
+      $("preview").innerHTML = imgs.map(function (u, i) { return '<img alt="Agreement page ' + (i + 1) + '" src="' + u + '">'; }).join("");
+      btn.textContent = "Share PDF"; setStatus("PDF ready. Check the pages below, then tap Share PDF.", "ok");
+      $("preview").scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (e) {
+      console.error(e); setStatus("Could not create the PDF. Try again.", "err"); btn.textContent = "Create PDF";
+    }
+    btn.disabled = false;
+  }
+
+  async function save() {
+    var file = new File([lastBlob], lastName, { type: "application/pdf" });
+    try {
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: "PlayVault Rental Agreement" });
+        setStatus("Shared.", "ok"); return;
+      }
+    } catch (e) {
+      if (e && e.name === "AbortError") { setStatus("Cancelled.", ""); return; }
+    }
+    var a = document.createElement("a"); a.href = URL.createObjectURL(lastBlob); a.download = lastName;
+    document.body.appendChild(a); a.click(); a.remove();
+    setStatus("PDF downloaded. Find it in your Downloads or Files app.", "ok");
+  }
+
+  $("makeBtn").addEventListener("click", function () { if (lastBlob && $("makeBtn").textContent === "Share PDF") save(); else make(); });
+  document.addEventListener("input", function (e) { if (lastBlob && e.target.closest && e.target.closest("#form")) { lastBlob = null; $("makeBtn").textContent = "Create PDF"; } });
+  var armed = null;
+  $("clearBtn").addEventListener("click", function () {
+    var b = $("clearBtn");
+    if (!armed) { b.textContent = "Tap again to clear"; armed = setTimeout(function () { armed = null; b.textContent = "Clear form"; }, 3000); return; }
+    clearTimeout(armed); armed = null; b.textContent = "Clear form"; render(); window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+  render();
+})();
+</script>
+</body>
+</html>
