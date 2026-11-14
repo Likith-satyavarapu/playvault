@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="PlayVault Rewards">
+<title>PlayVault Rewards</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap">
+<style>
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+:root {
+  --bg: #F2F5FB; --surface: #FFFFFF; --fg: #0E1629; --muted: #566178; --line: #D3DBEC;
+  --accent: #2563EB; --accent-fg: #FFFFFF; --field: #F7F9FE; --ok: #0E7C47; --warn: #B4570A; --wa: #1FA855;
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A0F1E; --surface: #121A2E; --fg: #E8ECF6; --muted: #98A3BC; --line: #26314C;
+    --accent: #6C9CFF; --accent-fg: #07101F; --field: #0E1527; --ok: #4FD08D; --warn: #F0A25C; --wa: #2BC46A; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 40px;
+}
+.wrap { max-width: 640px; margin: 0 auto; }
+.hero { text-align: center; padding: 24px 0 4px; }
+.hero h1 { font-family: var(--font-display); font-size: 26px; letter-spacing: .04em; margin: 0; }
+.hero .tag { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .12em; margin-top: 4px; text-transform: uppercase; }
+section.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-top: 16px; }
+section.card > h2 { font-family: var(--font-display); font-size: 15px; margin: 0 0 12px; letter-spacing: .02em; text-transform: uppercase; }
+.grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.fld { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.fld.full { grid-column: 1 / -1; }
+.fld > label { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .02em; }
+input[type=text], input[type=tel], input[type=number] {
+  width: 100%; font: inherit; font-size: 16px; color: var(--fg); background: var(--field); border: 1px solid var(--line);
+  border-radius: 8px; padding: 10px 11px; min-height: 44px; min-width: 0; appearance: none; -webkit-appearance: none;
+}
+input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+button { font: inherit; cursor: pointer; }
+.btn { min-height: 46px; border-radius: 10px; font-weight: 700; font-size: 15px; border: 1.5px solid var(--line); background: var(--field); color: var(--fg); padding: 0 16px; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.btn.wa { background: var(--wa); border-color: var(--wa); color: #fff; }
+.btn.block { width: 100%; margin-top: 12px; }
+.btn.small { min-height: 38px; font-size: 13px; padding: 0 12px; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.link { background: none; border: 0; color: var(--accent); font-weight: 600; font-size: 14px; padding: 8px 0; min-height: 40px; }
+.hint { font-size: 12px; color: var(--muted); margin: 8px 0 0; }
+.list { display: grid; gap: 8px; margin-top: 12px; }
+.cust { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; text-align: left; padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--field); color: var(--fg); min-height: 56px; width: 100%; }
+.cust .n { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cust .m { font-size: 13px; color: var(--muted); }
+.cust .p { grid-column: 2; grid-row: 1 / 3; align-self: center; text-align: right; font-weight: 800; color: var(--accent); font-size: 17px; }
+.cust .p small { display: block; font-size: 10px; font-weight: 600; color: var(--muted); letter-spacing: .04em; }
+.stat { display: flex; gap: 18px; font-size: 13px; color: var(--muted); margin-top: 10px; }
+.stat b { color: var(--fg); }
+.bal { text-align: center; padding: 6px 0 2px; }
+.bal .big { font-family: var(--font-display); font-size: 44px; font-weight: 700; line-height: 1; color: var(--accent); }
+.bal .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.code { display: inline-block; font-family: ui-monospace, Menlo, monospace; font-weight: 700; background: var(--field); border: 1px dashed var(--muted); border-radius: 6px; padding: 2px 8px; }
+.alert { background: var(--warn); color: var(--accent-fg); border-radius: 10px; padding: 10px 13px; font-weight: 600; font-size: 14px; margin-top: 12px; }
+.done { background: var(--surface); border: 1.5px solid var(--ok); border-radius: 12px; padding: 14px 16px; margin-top: 16px; }
+.done p { margin: 0 0 4px; font-weight: 700; color: var(--ok); }
+.led { display: grid; gap: 0; }
+.led .r { display: grid; grid-template-columns: 70px minmax(0, 1fr) auto; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; align-items: baseline; }
+.led .r:last-child { border-bottom: 0; }
+.led .d { color: var(--muted); font-size: 12px; }
+.led .t small { display: block; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.led .v { font-weight: 800; font-variant-numeric: tabular-nums; }
+.pos { color: var(--ok); } .neg { color: var(--warn); }
+#toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; font-weight: 600; z-index: 9; max-width: 90vw; text-align: center; }
+.pre { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero"><h1>PLAYVAULT REWARDS</h1><div class="tag">Points · Referrals · Redemptions</div></header>
+  <div id="app"></div>
+</div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+<input type="file" id="file" accept=".json,application/json" hidden>
+<script>
+(function () {
+  var KEY = "pv_rewards_v1";
+  var DEF = { perRs: 10, ptValue: 0.5, minRedeem: 200, referPts: 100, welcomePts: 100, expiryMonths: 0 };
+  var S = load(), view = { name: "home", mobile: "" }, notes = [], search = "", prefill = null;
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function num(x) { var n = parseFloat(x); return isNaN(n) ? null : n; }
+  function inr(n) { return "₹" + (Math.round(n * 100) / 100).toLocaleString("en-IN"); }
+  function fmtD(ts) { return new Date(ts).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "2-digit" }); }
+  function norm(m) { var d = String(m || "").replace(/\D/g, ""); return d.length > 10 ? d.slice(-10) : d; }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  var tt = null;
+  function toast(m) { var t = $("toast"); t.textContent = m; t.hidden = false; clearTimeout(tt); tt = setTimeout(function () { t.hidden = true; }, 3500); }
+
+  function load() {
+    try { var o = JSON.parse(localStorage.getItem(KEY) || "null"); if (o && o.customers) { o.settings = Object.assign({}, DEF, o.settings || {}); return o; } } catch (e) {}
+    return { settings: Object.assign({}, DEF), customers: {} };
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); return true; } catch (e) { toast("Could not save on this phone. Storage may be full."); return false; } }
+
+  /* ---- points maths (oldest points are used first; expired points drop out) ---- */
+  function calc(c, now) {
+    now = now || Date.now();
+    var months = S.settings.expiryMonths, lots = [];
+    function expAt(ts) { if (!months) return Infinity; var d = new Date(ts); d.setMonth(d.getMonth() + months); return d.getTime(); }
+    c.ledger.slice().sort(function (a, b) { return a.ts - b.ts; }).forEach(function (e) {
+      if (e.pts > 0) lots.push({ pts: e.pts, exp: expAt(e.ts) });
+      else if (e.pts < 0) {
+        var need = -e.pts; lots = lots.filter(function (l) { return l.exp > e.ts; });
+        for (var i = 0; i < lots.length && need > 0; i++) { var t = Math.min(lots[i].pts, need); lots[i].pts -= t; need -= t; }
+        lots = lots.filter(function (l) { return l.pts > 0; });
+      }
+    });
+    lots = lots.filter(function (l) { return l.exp > now; });
+    return {
+      bal: lots.reduce(function (s, l) { return s + l.pts; }, 0),
+      soon: lots.filter(function (l) { return l.exp !== Infinity && l.exp - now < 14 * 864e5; })
+    };
+  }
+  function push(c, e) { e.id = uid(); e.ts = e.ts || Date.now(); c.ledger.push(e); }
+  function byCode(code) { code = String(code || "").trim().toUpperCase(); if (!code) return null; var k = Object.keys(S.customers); for (var i = 0; i < k.length; i++) if (S.customers[k[i]].code === code) return S.customers[k[i]]; return null; }
+  function makeCode(name, mobile) {
+    var l = (name.toUpperCase().replace(/[^A-Z]/g, "") + "PLY").slice(0, 3);
+    for (var n = 3; n <= 8; n++) { var c = l + mobile.slice(-n); if (!byCode(c)) return c; }
+    return l + uid().toUpperCase().slice(-5);
+  }
+
+  /* ---- WhatsApp messages (same wording as the message playbook) ---- */
+  function pv(c) { return calc(c); }
+  function expiryLine(c) { var s = pv(c).soon; return s.length ? "\nExpiry: " + s.reduce(function (a, l) { return a + l.pts; }, 0) + " points on " + fmtD(s[0].exp) : (S.settings.expiryMonths ? "\nPoints expire " + S.settings.expiryMonths + " months after they are earned." : ""); }
+  function msgEarned(c, pts, ref, prev, cur, bonus) {
+    return "Thanks for playing, " + c.name + "! 🎮 We've added *" + pts + " points*" + (ref ? " for booking " + ref : "") + ".\n\nPrevious balance: " + prev + "\nEarned: +" + pts + (bonus ? "\nWelcome bonus: +" + bonus : "") + "\nNew balance: " + cur + " points\n\nUse them on your next booking. Reply *POINTS* to check any time.";
+  }
+  function msgBalance(c) { var b = pv(c).bal; return "Hi " + c.name + ", your PlayVault balance is *" + b + " points* (worth " + inr(b * S.settings.ptValue) + ")." + expiryLine(c) + "\n\nReply *REDEEM* to use them on your next booking."; }
+  function msgOffer(c) { var s = S.settings, b = pv(c).bal; return "You have " + b + " points waiting! 🎁\n\nYou can redeem points for " + inr(s.ptValue) + " off per point (minimum " + s.minRedeem + " points) on an eligible booking.\n\nReply *REDEEM* with your dates and I'll work out the new total."; }
+  function msgRedeemed(c, ref, pts, val, total, rem) {
+    return "Points applied ✅\n\n" + (ref ? "Booking: " + ref + "\n" : "") + "Points redeemed: −" + pts + "\nDiscount: −" + inr(val) + (total != null ? "\nNew total: " + inr(total) : "") + "\nRemaining points: " + rem + "\n\nThank you for being part of PlayVault!";
+  }
+  function msgCode(c) { var s = S.settings; return "Your PlayVault referral code is *" + c.code + "* 🎁\n\nShare it with friends. When they complete their first booking and mention your code, you earn " + s.referPts + " points and they get " + s.welcomePts + " welcome points. Terms apply."; }
+  function msgRefOk(r, friend, pts, cur) { return "Player two has joined! 🎮 Your friend " + friend + " completed a booking with your code.\n\nWe've added " + pts + " points.\nNew balance: " + cur + " points\n\nThanks for spreading the word!"; }
+  function msgWelcome(c, refName) { return "Hey " + c.name + "! 👋 " + refName + " invited you to PlayVault.\n\nUse code *" + c.referredBy + "* on your first booking and you'll get " + S.settings.welcomePts + " welcome points once it's completed.\n\nTell me your dates and favourite games and I'll check availability."; }
+  function msgExpiry(c) { var s = pv(c).soon; if (!s.length) return ""; var t = s.reduce(function (a, l) { return a + l.pts; }, 0); return "Heads up, " + c.name + ": " + t + " of your PlayVault points expire on " + fmtD(s[0].exp) + ". ⏳\n\nUse them on a booking before then. Reply *REDEEM* with your dates and I'll apply them."; }
+
+  function openWa(mobile, text) {
+    var url = "https://wa.me/91" + mobile + "?text=" + encodeURIComponent(text);
+    var w = window.open(url, "_blank"); if (!w) location.href = url;
+  }
+
+  /* ---- views ---- */
+  function render() {
+    var a = $("app");
+    if (view.name === "settings") a.innerHTML = vSettings();
+    else if (view.name === "cust" && S.customers[view.mobile]) a.innerHTML = vCust(S.customers[view.mobile]);
+    else { view = { name: "home", mobile: "" }; a.innerHTML = vHome(); drawList(); }
+    window.scrollTo(0, 0);
+    wirePreview();
+  }
+
+  function vHome() {
+    var keys = Object.keys(S.customers), tot = 0;
+    keys.forEach(function (k) { tot += calc(S.customers[k]).bal; });
+    return '<section class="card"><h2>Customers</h2><div class="row"><input id="q" type="text" inputmode="search" placeholder="Search name or mobile" aria-label="Search" value="' + esc(search) + '" style="flex:1"><button class="btn primary" data-act="addopen" style="flex:none">Add</button></div>' +
+      '<div class="stat"><span><b>' + keys.length + '</b> customers</span><span><b>' + tot + '</b> points outstanding</span></div>' +
+      '<div id="addbox" hidden><div class="grid" style="margin-top:14px"><div class="fld"><label for="n_name">Name</label><input id="n_name" type="text"></div><div class="fld"><label for="n_mob">Mobile number</label><input id="n_mob" type="tel" inputmode="tel"></div>' +
+      '<div class="fld full"><label for="n_ref">Referral code used (optional)</label><input id="n_ref" type="text" autocapitalize="characters"></div></div><button class="btn primary block" data-act="addsave">Save customer</button></div>' +
+      '<div class="list" id="list"></div></section>' +
+      '<section class="card"><h2>More</h2><div class="row"><button class="btn small" data-act="settings">Reward rules</button><button class="btn small" data-act="exp-c">Export customers</button><button class="btn small" data-act="exp-l">Export ledger</button><button class="btn small" data-act="backup">Back up</button><button class="btn small" data-act="restore">Restore</button></div><p class="hint">Exports open as spreadsheets in Numbers or Excel. Back up often: data lives only on this phone.</p></section>';
+  }
+  function drawList() {
+    var q = search.toLowerCase(), l = $("list"); if (!l) return;
+    var arr = Object.keys(S.customers).map(function (k) { return S.customers[k]; }).filter(function (c) { return !q || (c.name + " " + c.mobile).toLowerCase().indexOf(q) >= 0; })
+      .sort(function (a, b) { return a.name.localeCompare(b.name); });
+    l.innerHTML = arr.length ? arr.map(function (c) { return '<button class="cust" data-act="open" data-m="' + esc(c.mobile) + '"><span class="n">' + esc(c.name) + '</span><span class="m">' + esc(c.mobile) + ' · ' + esc(c.code) + '</span><span class="p">' + calc(c).bal + '<small>POINTS</small></span></button>'; }).join("")
+      : '<p class="hint">' + (Object.keys(S.customers).length ? "No match." : "No customers yet. Tap Add to create the first one.") + "</p>";
+  }
+
+  function vCust(c) {
+    var k = calc(c), s = S.settings, p = prefill || {}; prefill = null;
+    var h = '<div style="margin-top:14px"><button class="link" data-act="back">← All customers</button></div>';
+    if (notes.length) {
+      h += '<div class="done"><p>Saved ✅</p>' + notes.map(function (n, i) { return '<button class="btn wa block" data-act="wa" data-i="' + i + '">' + esc(n.label) + "</button>"; }).join("") + "</div>";
+    }
+    h += '<section class="card"><div class="bal"><div class="big">' + k.bal + '</div><div class="sub">points · worth ' + inr(k.bal * s.ptValue) + '</div></div>' +
+      '<div style="text-align:center;margin-top:10px"><b style="font-size:17px">' + esc(c.name) + '</b><div class="hint" style="margin:2px 0 0">' + esc(c.mobile) + ' · code <span class="code">' + esc(c.code) + "</span></div></div>" +
+      (k.soon.length ? '<div class="alert">' + k.soon.reduce(function (a, l) { return a + l.pts; }, 0) + " points expire on " + fmtD(k.soon[0].exp) + "</div>" : "") +
+      '<div class="row" style="margin-top:14px;justify-content:center"><button class="btn small" data-act="send" data-k="bal">Send balance</button><button class="btn small" data-act="send" data-k="offer">Send redeem offer</button><button class="btn small" data-act="send" data-k="code">Send my code</button>' + (k.soon.length ? '<button class="btn small" data-act="send" data-k="exp">Send expiry</button>' : "") + "</div></section>";
+
+    h += '<section class="card"><h2>Booking completed</h2><div class="grid"><div class="fld"><label for="e_ref">Booking ID</label><input id="e_ref" type="text" value="' + esc(p.b || "") + '"></div><div class="fld"><label for="e_amt">Amount paid (₹, without deposit)</label><input id="e_amt" type="number" inputmode="decimal" value="' + esc(p.a || "") + '"></div></div>' +
+      '<p class="hint pre" id="e_pv"></p><button class="btn primary block" data-act="earn">Add points</button></section>';
+
+    h += '<section class="card"><h2>Redeem points</h2><div class="grid"><div class="fld"><label for="r_pts">Points to use</label><input id="r_pts" type="number" inputmode="numeric"></div><div class="fld"><label for="r_ref">Booking ID</label><input id="r_ref" type="text"></div><div class="fld full"><label for="r_tot">Booking total before discount (₹, optional)</label><input id="r_tot" type="number" inputmode="decimal"></div></div>' +
+      '<p class="hint pre" id="r_pv">Minimum ' + s.minRedeem + " points. Each point is worth " + inr(s.ptValue) + ".</p><button class=\"btn primary block\" data-act=\"redeem\">Redeem</button></section>";
+
+    h += '<section class="card"><h2>Adjust points</h2><div class="grid"><div class="fld"><label for="a_pts">Points (use − to remove)</label><input id="a_pts" type="number" inputmode="numeric"></div><div class="fld"><label for="a_note">Reason</label><input id="a_note" type="text" placeholder="e.g. booking cancelled"></div></div><button class="btn block" data-act="adjust">Save adjustment</button></section>';
+
+    var led = c.ledger.slice().sort(function (a, b) { return b.ts - a.ts; });
+    var LBL = { earn: "Booking", redeem: "Redeemed", welcome: "Welcome bonus", referral: "Referral bonus", adjust: "Adjustment" };
+    h += '<section class="card"><h2>History</h2>' + (led.length ? '<div class="led">' + led.map(function (e) {
+      return '<div class="r"><span class="d">' + fmtD(e.ts) + '</span><span class="t">' + esc(LBL[e.type] || e.type) + "<small>" + esc([e.ref, e.note].filter(Boolean).join(" · ")) + '</small></span><span class="v ' + (e.pts >= 0 ? "pos" : "neg") + '">' + (e.pts > 0 ? "+" : "") + e.pts + "</span></div>";
+    }).join("") + "</div>" : '<p class="hint" style="margin:0">No points yet.</p>') + "</section>";
+    h += '<div class="row" style="margin-top:8px"><button class="link" data-act="del" data-m="' + esc(c.mobile) + '">Delete customer</button></div>';
+    return h;
+  }
+
+  function vSettings() {
+    var s = S.settings;
+    return '<div style="margin-top:14px"><button class="link" data-act="back">← Back</button></div><section class="card"><h2>Reward rules</h2><div class="grid">' +
+      '<div class="fld"><label for="s_per">₹ spent to earn 1 point</label><input id="s_per" type="number" inputmode="decimal" value="' + s.perRs + '"></div>' +
+      '<div class="fld"><label for="s_val">₹ value of 1 point</label><input id="s_val" type="number" inputmode="decimal" value="' + s.ptValue + '"></div>' +
+      '<div class="fld"><label for="s_min">Minimum points to redeem</label><input id="s_min" type="number" inputmode="numeric" value="' + s.minRedeem + '"></div>' +
+      '<div class="fld"><label for="s_exp">Points expire after (months, 0 = never)</label><input id="s_exp" type="number" inputmode="numeric" value="' + s.expiryMonths + '"></div>' +
+      '<div class="fld"><label for="s_ref">Referral reward (points)</label><input id="s_ref" type="number" inputmode="numeric" value="' + s.referPts + '"></div>' +
+      '<div class="fld"><label for="s_wel">Welcome reward (points)</label><input id="s_wel" type="number" inputmode="numeric" value="' + s.welcomePts + '"></div></div>' +
+      '<p class="hint pre" id="s_pv"></p><button class="btn primary block" data-act="setsave">Save rules</button>' +
+      '<p class="hint">These numbers are examples to start with. Change them to your own rules. Rules apply to new points; points already earned keep their amount.</p></section>';
+  }
+
+  function wirePreview() {
+    var ea = $("e_amt");
+    if (ea) { var up = function () { var a = num(ea.value), p = a == null ? 0 : Math.floor(a / S.settings.perRs); $("e_pv").textContent = a == null ? "Enter the amount paid to see the points." : "= " + p + " points"; }; ea.addEventListener("input", up); up(); }
+    var rp = $("r_pts");
+    if (rp) {
+      var ur = function () { var p = num(rp.value), t = num($("r_tot").value), s = S.settings; if (p == null) { $("r_pv").textContent = "Minimum " + s.minRedeem + " points. Each point is worth " + inr(s.ptValue) + "."; return; } var v = p * s.ptValue; $("r_pv").textContent = "Discount " + inr(v) + (t != null ? " · new total " + inr(Math.max(0, t - v)) : ""); };
+      rp.addEventListener("input", ur); $("r_tot").addEventListener("input", ur);
+    }
+    if ($("s_per")) {
+      var us = function () { var per = num($("s_per").value) || 1, val = num($("s_val").value) || 0; var pts = Math.floor(2500 / per); $("s_pv").textContent = "Example: a ₹2,500 booking earns " + pts + " points, worth " + inr(pts * val) + " (" + Math.round(pts * val / 2500 * 1000) / 10 + "% back)."; };
+      ["s_per", "s_val"].forEach(function (i) { $(i).addEventListener("input", us); }); us();
+    }
+    var q = $("q"); if (q) q.addEventListener("input", function () { search = q.value; drawList(); });
+  }
+
+  /* ---- actions ---- */
+  function cur() { return S.customers[view.mobile]; }
+  function go(name, m) { view = { name: name, mobile: m || "" }; render(); }
+
+  function doEarn() {
+    var c = cur(), amt = num($("e_amt").value), ref = $("e_ref").value.trim();
+    if (amt == null || amt <= 0) { toast("Enter the amount paid."); return; }
+    var pts = Math.floor(amt / S.settings.perRs);
+    if (pts <= 0) { toast("That amount earns 0 points."); return; }
+    var prev = calc(c).bal, first = !c.ledger.some(function (e) { return e.type === "earn"; }), bonus = 0, out = [];
+    push(c, { type: "earn", pts: pts, amt: amt, ref: ref, note: "" });
+    if (first && c.referredBy && !c.refDone) {
+      var r = byCode(c.referredBy);
+      if (r && r.mobile !== c.mobile) {
+        bonus = S.settings.welcomePts; c.refDone = true;
+        if (bonus) push(c, { type: "welcome", pts: bonus, note: "Referred by " + r.name });
+        if (S.settings.referPts) push(r, { type: "referral", pts: S.settings.referPts, note: c.name + " completed first booking" });
+        out.push({ label: "Tell " + r.name + " (referrer) on WhatsApp", to: r.mobile, text: msgRefOk(r, c.name, S.settings.referPts, calc(r).bal) });
+      }
+    }
+    out.unshift({ label: "Send points message to " + c.name, to: c.mobile, text: msgEarned(c, pts, ref, prev, calc(c).bal, bonus) });
+    notes = out; if (save()) { toast("+" + pts + " points added" + (bonus ? " (+" + bonus + " welcome bonus)" : "")); render(); }
+  }
+  function doRedeem() {
+    var c = cur(), s = S.settings, p = num($("r_pts").value), ref = $("r_ref").value.trim(), tot = num($("r_tot").value), b = calc(c).bal;
+    if (p == null || p <= 0 || p !== Math.floor(p)) { toast("Enter the points to use."); return; }
+    if (p < s.minRedeem) { toast("Minimum is " + s.minRedeem + " points."); return; }
+    if (p > b) { toast("Only " + b + " points available."); return; }
+    var val = p * s.ptValue;
+    push(c, { type: "redeem", pts: -p, amt: val, ref: ref, note: "Discount " + inr(val) });
+    notes = [{ label: "Send redemption message to " + c.name, to: c.mobile, text: msgRedeemed(c, ref, p, val, tot != null ? Math.max(0, tot - val) : null, calc(c).bal) }];
+    if (save()) { toast(inr(val) + " discount recorded"); render(); }
+  }
+  function doAdjust() {
+    var c = cur(), p = num($("a_pts").value), note = $("a_note").value.trim();
+    if (p == null || p === 0 || p !== Math.floor(p)) { toast("Enter the points to add or remove."); return; }
+    if (!note) { toast("Add a short reason."); return; }
+    push(c, { type: "adjust", pts: p, note: note }); notes = [];
+    if (save()) { toast("Adjustment saved"); render(); }
+  }
+  function doAdd() {
+    var name = $("n_name").value.trim(), mob = norm($("n_mob").value), code = $("n_ref").value.trim().toUpperCase();
+    if (!name) { toast("Enter the customer's name."); return; }
+    if (mob.length !== 10) { toast("Enter a 10-digit mobile number."); return; }
+    if (S.customers[mob]) { toast("This number is already saved."); notes = []; go("cust", mob); return; }
+    var r = null; if (code) { r = byCode(code); if (!r) { toast("No customer has the code " + code + "."); return; } }
+    var c = { name: name, mobile: mob, code: makeCode(name, mob), referredBy: r ? r.code : "", refDone: false, created: Date.now(), ledger: [] };
+    S.customers[mob] = c; notes = r ? [{ label: "Send welcome message to " + c.name, to: mob, text: msgWelcome(c, r.name) }] : [];
+    if (save()) { toast("Customer saved"); go("cust", mob); }
+  }
+  function doSettings() {
+    var v = { perRs: num($("s_per").value), ptValue: num($("s_val").value), minRedeem: num($("s_min").value), expiryMonths: num($("s_exp").value), referPts: num($("s_ref").value), welcomePts: num($("s_wel").value) };
+    if (!(v.perRs > 0) || !(v.ptValue > 0) || v.minRedeem == null || v.minRedeem < 0 || v.expiryMonths == null || v.expiryMonths < 0 || v.referPts == null || v.referPts < 0 || v.welcomePts == null || v.welcomePts < 0) { toast("Check the numbers. Earn rate and point value must be above 0."); return; }
+    Object.keys(v).forEach(function (k) { S.settings[k] = k === "ptValue" ? v[k] : Math.round(v[k] * 100) / 100; });
+    if (save()) { toast("Rules saved"); go("home"); }
+  }
+
+  /* ---- files ---- */
+  function csv(rows) { return "﻿" + rows.map(function (r) { return r.map(function (f) { return '"' + String(f == null ? "" : f).replace(/"/g, '""') + '"'; }).join(","); }).join("\r\n"); }
+  async function sendFile(name, text, type) {
+    var blob = new Blob([text], { type: type }), file = new File([blob], name, { type: type });
+    try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: name }); return true; } }
+    catch (e) { if (e && e.name === "AbortError") return false; }
+    var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); toast("Downloaded " + name); return true;
+  }
+  function stamp() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  function expCust() {
+    var rows = [["Name", "Mobile", "Referral code", "Referred by", "Points balance", "Value (₹)", "Bookings", "Joined"]];
+    Object.keys(S.customers).forEach(function (k) { var c = S.customers[k], b = calc(c).bal; rows.push([c.name, c.mobile, c.code, c.referredBy, b, b * S.settings.ptValue, c.ledger.filter(function (e) { return e.type === "earn"; }).length, fmtD(c.created)]); });
+    sendFile("PlayVault_Rewards_Customers_" + stamp() + ".csv", csv(rows), "text/csv");
+  }
+  function expLed() {
+    var rows = [["Date", "Customer", "Mobile", "Type", "Points", "Amount (₹)", "Booking ID", "Note"]], all = [];
+    Object.keys(S.customers).forEach(function (k) { S.customers[k].ledger.forEach(function (e) { all.push([e, S.customers[k]]); }); });
+    all.sort(function (a, b) { return a[0].ts - b[0].ts; }).forEach(function (x) { var e = x[0], c = x[1]; rows.push([new Date(e.ts).toLocaleString("en-IN"), c.name, c.mobile, e.type, e.pts, e.amt || "", e.ref || "", e.note || ""]); });
+    sendFile("PlayVault_Rewards_Ledger_" + stamp() + ".csv", csv(rows), "text/csv");
+  }
+  async function backup() {
+    if (!Object.keys(S.customers).length) { toast("Nothing to back up yet."); return; }
+    var ok = await sendFile("PlayVault_Rewards_Backup_" + stamp() + ".json", JSON.stringify({ app: "playvault-rewards", version: 1, exported: Date.now(), data: S }), "application/json");
+    if (ok) toast("Backup ready. Save it to Files.");
+  }
+  $("file").addEventListener("change", function () {
+    var f = $("file").files && $("file").files[0]; if (!f) return;
+    var rd = new FileReader();
+    rd.onload = function () {
+      try {
+        var o = JSON.parse(rd.result);
+        if (!o || o.app !== "playvault-rewards" || !o.data || !o.data.customers) throw new Error("bad");
+        var added = 0, fresh = !Object.keys(S.customers).length;
+        if (fresh && o.data.settings) S.settings = Object.assign({}, DEF, o.data.settings);
+        Object.keys(o.data.customers).forEach(function (m) {
+          var inc = o.data.customers[m], c = S.customers[m];
+          if (!c) { S.customers[m] = inc; added += inc.ledger.length + 1; return; }
+          var have = {}; c.ledger.forEach(function (e) { have[e.id] = 1; });
+          inc.ledger.forEach(function (e) { if (!have[e.id]) { c.ledger.push(e); added++; } });
+          if (inc.refDone) c.refDone = true;
+        });
+        if (save()) { toast(added ? "Restored " + added + " item" + (added > 1 ? "s" : "") : "Nothing new to restore"); render(); }
+      } catch (e) { toast("That file is not a PlayVault rewards backup."); }
+      $("file").value = "";
+    };
+    rd.readAsText(f);
+  });
+
+  /* ---- clicks ---- */
+  var armed = null;
+  $("app").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-act]"); if (!b) return; var a = b.getAttribute("data-act");
+    if (a === "open") { notes = []; go("cust", b.getAttribute("data-m")); }
+    else if (a === "back") { notes = []; go("home"); }
+    else if (a === "addopen") { var bx = $("addbox"); bx.hidden = !bx.hidden; if (!bx.hidden) $("n_name").focus(); }
+    else if (a === "addsave") doAdd();
+    else if (a === "earn") doEarn();
+    else if (a === "redeem") doRedeem();
+    else if (a === "adjust") doAdjust();
+    else if (a === "settings") go("settings");
+    else if (a === "setsave") doSettings();
+    else if (a === "exp-c") expCust();
+    else if (a === "exp-l") expLed();
+    else if (a === "backup") backup();
+    else if (a === "restore") $("file").click();
+    else if (a === "wa") { var n = notes[parseInt(b.getAttribute("data-i"), 10)]; if (n) openWa(n.to, n.text); }
+    else if (a === "send") {
+      var c = cur(), k = b.getAttribute("data-k"), t = k === "bal" ? msgBalance(c) : k === "offer" ? msgOffer(c) : k === "code" ? msgCode(c) : msgExpiry(c);
+      if (t) openWa(c.mobile, t);
+    } else if (a === "del") {
+      if (armed === b) { delete S.customers[b.getAttribute("data-m")]; armed = null; save(); toast("Customer deleted"); go("home"); }
+      else { armed = b; b.textContent = "Tap again to delete"; setTimeout(function () { if (armed === b) { armed = null; b.textContent = "Delete customer"; } }, 3000); }
+    }
+  });
+
+  /* ---- open from a link, e.g. rewards.html?m=9876543210&n=Ravi&a=2500&b=PV-123 ---- */
+  try {
+    var q = new URLSearchParams(location.search), pm = norm(q.get("m"));
+    if (pm.length === 10) {
+      if (!S.customers[pm]) {
+        var pn = (q.get("n") || "").trim();
+        if (pn) { S.customers[pm] = { name: pn, mobile: pm, code: makeCode(pn, pm), referredBy: "", refDone: false, created: Date.now(), ledger: [] }; save(); }
+      }
+      if (S.customers[pm]) { view = { name: "cust", mobile: pm }; prefill = { a: q.get("a") || "", b: q.get("b") || "" }; }
+    }
+  } catch (e) {}
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="PlayVault Booking">
+<title>PlayVault Booking Confirmation</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap">
+<style>
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+:root {
+  --bg: #F2F5FB; --surface: #FFFFFF; --fg: #0E1629; --muted: #566178; --line: #D3DBEC;
+  --accent: #2563EB; --accent-fg: #FFFFFF; --field: #F7F9FE; --ok: #0E7C47; --warn: #B4570A;
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A0F1E; --surface: #121A2E; --fg: #E8ECF6; --muted: #98A3BC; --line: #26314C;
+    --accent: #6C9CFF; --accent-fg: #07101F; --field: #0E1527; --ok: #4FD08D; --warn: #F0A25C; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 120px;
+}
+.wrap { max-width: 640px; margin: 0 auto; }
+.hero { text-align: center; padding: 28px 0 6px; }
+.hero h1 { font-family: var(--font-display); font-size: 30px; letter-spacing: .04em; margin: 0; }
+.hero .tag { color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .12em; margin-top: 4px; text-transform: uppercase; }
+.hero .sub { color: var(--muted); font-size: 14px; margin: 14px auto 0; max-width: 46ch; text-wrap: balance; }
+section.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-top: 16px; }
+section.card > h2 { font-family: var(--font-display); font-size: 16px; margin: 0 0 14px; letter-spacing: .02em; text-transform: uppercase; }
+.grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.fld { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.fld.full { grid-column: 1 / -1; }
+.fld > label, .lab { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .02em; }
+input[type=text], input[type=tel], input[type=number], input[type=datetime-local], textarea {
+  width: 100%; font: inherit; font-size: 16px; color: var(--fg); background: var(--field); border: 1px solid var(--line);
+  border-radius: 8px; padding: 10px 11px; min-height: 44px; min-width: 0; appearance: none; -webkit-appearance: none;
+}
+textarea { min-height: 110px; resize: vertical; }
+input:focus-visible, textarea:focus-visible, button:focus-visible, .tick input:focus-visible + .box { outline: 2px solid var(--accent); outline-offset: 1px; }
+.hint { font-size: 12px; color: var(--muted); margin: 6px 0 0; }
+.sum { display: grid; gap: 0; }
+.sum .row { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.sum .row:last-child { border-bottom: 0; }
+.sum .k { color: var(--muted); font-size: 13px; }
+.sum .val { font-weight: 600; text-align: right; min-width: 0; overflow-wrap: anywhere; }
+.sum .big .val { font-size: 17px; color: var(--accent); }
+ul.terms { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 14px; }
+.tick { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; font-size: 14px; font-weight: 500; }
+.tick input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.tick .box { width: 28px; height: 28px; border: 2px solid var(--muted); border-radius: 6px; background: var(--surface); display: inline-grid; place-items: center; flex: none; }
+.tick input:checked + .box { background: var(--accent); border-color: var(--accent); }
+.tick input:checked + .box::after { content: ""; width: 7px; height: 13px; border: solid var(--accent-fg); border-width: 0 3px 3px 0; transform: rotate(45deg) translate(-1px, -1px); }
+.pad { width: 100%; height: 130px; border: 1.5px dashed var(--muted); border-radius: 10px; background: var(--field); touch-action: none; display: block; }
+.padbar { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); }
+button { font: inherit; cursor: pointer; }
+.link { background: none; border: 0; color: var(--accent); font-weight: 600; font-size: 13px; padding: 8px 0; min-height: 36px; }
+.bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface); border-top: 1px solid var(--line); z-index: 5;
+  padding: 10px max(16px, env(safe-area-inset-left, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
+.bar .in { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; }
+.btn { flex: 1; min-height: 48px; border-radius: 10px; font-weight: 700; font-size: 15px; border: 1.5px solid var(--line); background: var(--field); color: var(--fg); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); flex: 2; }
+.btn.wa { background: #1FA855; border-color: #1FA855; color: #fff; width: 100%; margin-top: 12px; }
+.btn:disabled { opacity: .55; cursor: default; }
+#status { margin-top: 16px; font-size: 14px; min-height: 20px; }
+#status.err { color: var(--warn); } #status.ok { color: var(--ok); }
+#preview { margin-top: 12px; }
+#preview img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; background: #fff; display: block; }
+#linkOut { margin-top: 12px; }
+#sheetwrap { position: fixed; left: 0; top: 0; width: 794px; opacity: 0; pointer-events: none; z-index: -1; }
+
+.pg { width: 794px; height: 1123px; background: #fff; color: #1B2333; font: 400 11.5px/1.35 Inter, Arial, sans-serif; position: relative; overflow: hidden; padding: 0 38px; }
+.pg .band { position: absolute; left: 0; right: 0; top: 0; height: 18px; background: #0B1426; }
+.pg .ttl { text-align: center; padding-top: 34px; font: 800 30px/1 "Space Grotesk", Inter, sans-serif; letter-spacing: .04em; color: #0B1426; }
+.pg .tg { text-align: center; color: #2563EB; font-weight: 700; font-size: 9.5px; letter-spacing: .12em; margin-top: 7px; }
+.pg .agr { display: flex; justify-content: space-between; align-items: center; margin: 22px 0 14px; }
+.pg .agr b { font: 700 16px "Space Grotesk", Inter, sans-serif; color: #0B1426; }
+.pg h3 { font: 700 12.5px "Space Grotesk", Inter, sans-serif; color: #0B1426; margin: 20px 0 8px; display: flex; align-items: center; gap: 8px; }
+.pg h3::before { content: ""; width: 4px; height: 15px; background: #2563EB; display: block; }
+.pg .tb { display: grid; border-top: 1px solid #C5D0E6; border-left: 1px solid #C5D0E6; grid-template-columns: 140px 1fr 140px 1fr; }
+.pg .tb > div { border-right: 1px solid #C5D0E6; border-bottom: 1px solid #C5D0E6; padding: 6px 8px; min-height: 36px; display: flex; align-items: center; min-width: 0; overflow-wrap: anywhere; }
+.pg .tb > .l { background: #F1F4FB; font-weight: 700; font-size: 10px; color: #0B1426; }
+.pg ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 11.5px; }
+.pg .sg { height: 60px; max-width: 100%; display: block; }
+.pg .note { font-size: 11px; margin: 0 0 10px; }
+.pg .ft { position: absolute; left: 38px; right: 38px; bottom: 28px; border-top: 1px solid #C5D0E6; padding-top: 8px; display: flex; justify-content: space-between; font-size: 9.5px; color: #566178; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>PLAYVAULT</h1>
+    <div class="tag">Game on. Anywhere. &nbsp;·&nbsp; PS5 gaming rentals &nbsp;·&nbsp; Visakhapatnam</div>
+    <p class="sub" id="sub"></p>
+  </header>
+  <div id="app"></div>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div id="preview"></div>
+</div>
+<div class="bar"><div class="in" id="bar"></div></div>
+<div id="sheetwrap" aria-hidden="true"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+(function () {
+  var OWNER_WA = "919666880474", SITE = "playvaultvizag.shop", INSTA = "@Playvault.vsp";
+  var DEF_TERMS = "The token (₹{token}) is adjusted against your rental amount.\nCancel 24 hours or more before pick-up: token refunded in full.\nCancel within 24 hours, or no-show: token is non-refundable.";
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+  function localStr(d) { return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()) + "T" + pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
+  function fmt(v) { if (!v) return ""; var d = new Date(v); return isNaN(d) ? v : d.toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "numeric", minute: "2-digit", hour12: true }); }
+  function num(x) { var n = parseFloat(x); return isNaN(n) ? null : n; }
+  function rs(x) { return x === "" || x == null ? "—" : "₹ " + x; }
+  function v(id) { return $(id) ? $(id).value.trim() : ""; }
+  function setStatus(m, c) { var s = $("status"); s.textContent = m; s.className = c || ""; }
+  function balance(b) { var r = num(b.rent), t = num(b.token); return r != null && t != null ? Math.max(0, r - t) : ""; }
+  function termsList(b) {
+    return String(b.terms || "").split("\n").map(function (l) { return l.trim().replace(/^[•\-\*]\s*/, ""); }).filter(Boolean)
+      .map(function (l) { return l.replace(/\{token\}/g, b.token || "___"); });
+  }
+  function b64e(o) { var u = new TextEncoder().encode(JSON.stringify(o)), bin = ""; u.forEach(function (c) { bin += String.fromCharCode(c); }); return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
+  function b64d(s) { s = s.replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; var bin = atob(s), u = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return JSON.parse(new TextDecoder().decode(u)); }
+  function waNum(m) { var d = String(m || "").replace(/\D/g, ""); if (d.length === 10) d = "91" + d; return d; }
+  function openWa(number, text) {
+    var url = "https://wa.me/" + number + "?text=" + encodeURIComponent(text);
+    var w = window.open(url, "_blank"); if (!w) location.href = url;
+  }
+  function field(id, label, type, extra) {
+    extra = extra || {};
+    return '<div class="fld' + (extra.full ? " full" : "") + '"><label for="' + id + '">' + esc(label) + "</label>" +
+      (type === "textarea" ? '<textarea id="' + id + '"></textarea>' : '<input id="' + id + '" type="' + type + '"' + (extra.mode ? ' inputmode="' + extra.mode + '"' : "") + ">") + "</div>";
+  }
+
+  var B = null;
+  try { var q = new URLSearchParams(location.search).get("b"); if (q) B = b64d(q); } catch (e) { B = null; }
+
+  /* ================= OWNER VIEW ================= */
+  function ownerView() {
+    $("sub").textContent = "Enter the booking details, then send the confirmation link to your customer on WhatsApp.";
+    $("app").innerHTML =
+      '<section class="card"><h2>Booking</h2><div class="grid">' +
+      field("name", "Customer name", "text") + field("mobile", "Customer mobile", "tel", { mode: "tel" }) +
+      field("start", "Pick-up date & time", "datetime-local") + field("due", "Return date & time", "datetime-local") +
+      field("id", "Booking no.", "text") + "</div></section>" +
+      '<section class="card"><h2>Amounts</h2><div class="grid">' +
+      field("rent", "Rental amount (₹)", "number", { mode: "decimal" }) + field("token", "Token amount (₹)", "number", { mode: "decimal" }) +
+      field("deposit", "Security deposit at pick-up (₹)", "number", { mode: "decimal" }) +
+      '<div class="fld"><span class="lab">Balance at pick-up</span><div id="bal" style="min-height:44px;display:flex;align-items:center;font-weight:700">—</div></div></div></section>' +
+      '<section class="card"><h2>Token terms</h2>' + field("terms", "One term per line", "textarea", { full: true }) +
+      '<p class="hint">Use {token} where the token amount should appear. These terms are shown to the customer and printed on the PDF.</p></section>' +
+      '<section class="card" id="linkCard" hidden><h2>Customer link</h2><div class="fld"><label for="linkOut">Send this link to the customer</label><input id="linkOut" type="text" readonly></div></section>';
+    var now = new Date(); now.setMinutes(0, 0, 0);
+    $("start").value = localStr(now);
+    var d2 = new Date(now); d2.setDate(d2.getDate() + 1); $("due").value = localStr(d2);
+    $("id").value = "BK-" + String(now.getFullYear()).slice(2) + pad2(now.getMonth() + 1) + pad2(now.getDate()) + "-" + (100 + Math.floor(Math.random() * 900));
+    $("terms").value = DEF_TERMS;
+    function upd() { var b = balance({ rent: v("rent"), token: v("token") }); $("bal").textContent = b === "" ? "—" : "₹ " + b; }
+    $("rent").addEventListener("input", upd); $("token").addEventListener("input", upd);
+    $("bar").innerHTML = '<button class="btn" id="copyBtn" type="button">Copy link</button><button class="btn primary" id="waBtn" type="button">Send on WhatsApp</button>';
+
+    function build() {
+      if (!v("name") || !v("start") || !v("due") || !v("rent") || !v("token")) { setStatus("Fill in the customer name, both dates, rental amount and token amount first.", "err"); return null; }
+      var b = { id: v("id"), name: v("name"), mobile: v("mobile"), start: v("start"), due: v("due"), rent: v("rent"), token: v("token"), deposit: v("deposit"), terms: v("terms") || DEF_TERMS };
+      var link = location.origin + location.pathname + "?b=" + b64e(b);
+      if (location.protocol === "file:") link = location.href.split("?")[0] + "?b=" + b64e(b);
+      $("linkCard").hidden = false; $("linkOut").value = link; setStatus("", "");
+      return { b: b, link: link };
+    }
+    $("copyBtn").addEventListener("click", function () {
+      var r = build(); if (!r) return;
+      function fallback() { $("linkOut").focus(); $("linkOut").select(); $("linkOut").setSelectionRange(0, 99999); setStatus("Link selected. Tap Copy in the menu that appears.", "ok"); }
+      try { navigator.clipboard.writeText(r.link).then(function () { setStatus("Link copied. Paste it into WhatsApp.", "ok"); }, fallback); } catch (e) { fallback(); }
+    });
+    $("waBtn").addEventListener("click", function () {
+      var r = build(); if (!r) return; var b = r.b, bal = balance(b);
+      var msg = "Hi " + b.name + "! Thanks for choosing PlayVault 🎮\n\nPlease confirm your PS5 booking (" + b.id + "):\n" +
+        "📅 Pick-up: " + fmt(b.start) + "\n📅 Return: " + fmt(b.due) + "\n💰 Rental: ₹" + b.rent + "\n✅ Token: ₹" + b.token + (bal !== "" ? "\n💵 Balance at pick-up: ₹" + bal : "") +
+        (b.deposit ? "\n🔒 Refundable deposit at pick-up: ₹" + b.deposit : "") + "\n\nTap to review and confirm:\n" + r.link + "\n\n– PlayVault, Vizag";
+      openWa(waNum(b.mobile), msg);
+    });
+  }
+
+  /* ================= CUSTOMER VIEW ================= */
+  var pad = null, lastBlob = null, lastName = "";
+  function makePad(cv) {
+    var ctx, ink = false, down = false, dpr = Math.max(1, window.devicePixelRatio || 1);
+    var r0 = cv.getBoundingClientRect(); cv.width = Math.round(r0.width * dpr); cv.height = Math.round(r0.height * dpr);
+    ctx = cv.getContext("2d"); ctx.scale(dpr, dpr); ctx.lineWidth = 2.4; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#0B1426";
+    function pt(e) { var r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+    cv.addEventListener("pointerdown", function (e) { down = true; cv.setPointerCapture(e.pointerId); var p = pt(e); ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(p[0] + .1, p[1] + .1); ctx.stroke(); ink = true; e.preventDefault(); });
+    cv.addEventListener("pointermove", function (e) { if (!down) return; var p = pt(e); ctx.lineTo(p[0], p[1]); ctx.stroke(); e.preventDefault(); });
+    function up() { if (down) invalidate(); down = false; }
+    cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", up);
+    return { clear: function () { ctx.clearRect(0, 0, cv.width, cv.height); ink = false; invalidate(); }, url: function () { return ink ? cv.toDataURL("image/png") : ""; } };
+  }
+  function invalidate() { if (lastBlob) { lastBlob = null; var m = $("makeBtn"); if (m) m.textContent = "Create PDF"; } }
+
+  function customerView() {
+    var b = B, bal = balance(b), tl = termsList(b);
+    $("sub").textContent = "Please check your booking details below and confirm.";
+    function row(k, val, big) { return '<div class="row' + (big ? " big" : "") + '"><span class="k">' + esc(k) + '</span><span class="val">' + esc(val) + "</span></div>"; }
+    $("app").innerHTML =
+      '<section class="card"><h2>Your booking</h2><div class="sum">' +
+      row("Booking no.", b.id) + row("Pick-up", fmt(b.start)) + row("Return", fmt(b.due)) + row("Rental amount", rs(b.rent)) +
+      row("Token to confirm", rs(b.token), true) + (bal !== "" ? row("Balance at pick-up", rs(bal)) : "") + (b.deposit ? row("Refundable deposit at pick-up", rs(b.deposit)) : "") + "</div></section>" +
+      '<section class="card"><h2>Token terms</h2><ul class="terms">' + tl.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul></section>" +
+      '<section class="card"><h2>Confirm</h2><div class="grid">' + field("cname", "Your name", "text") + field("cmobile", "Your mobile number", "tel", { mode: "tel" }) + "</div>" +
+      '<div style="margin-top:14px"><label class="tick"><input type="checkbox" id="agree"><span class="box"></span><span>I confirm the dates and amounts above and accept the token terms.</span></label></div>' +
+      '<div style="margin-top:14px;display:flex;flex-direction:column;gap:6px"><span class="lab">Signature (optional, sign with your finger)</span><canvas class="pad" id="pad"></canvas>' +
+      '<div class="padbar"><span>Sign inside the box</span><button class="link" type="button" id="padClear">Clear signature</button></div></div></section>' +
+      '<section class="card" id="afterCard" hidden><h2>Send to PlayVault</h2><p class="hint" style="margin:0 0 4px">1. Tap Share PDF below and choose WhatsApp, then the PlayVault chat.<br>2. Then tap the button here to notify us of your confirmation.</p>' +
+      '<button class="btn wa" type="button" id="notifyBtn">Notify PlayVault on WhatsApp</button></section>';
+    $("cname").value = b.name || ""; $("cmobile").value = b.mobile || "";
+    pad = makePad($("pad")); $("padClear").addEventListener("click", function () { pad.clear(); });
+    ["cname", "cmobile", "agree"].forEach(function (id) { $(id).addEventListener("input", invalidate); $(id).addEventListener("change", invalidate); });
+    $("bar").innerHTML = '<button class="btn primary" id="makeBtn" type="button">Create PDF</button>';
+    $("makeBtn").addEventListener("click", function () { if (lastBlob && $("makeBtn").textContent === "Share PDF") share(); else make(); });
+    $("notifyBtn").addEventListener("click", function () {
+      var bal2 = balance(b);
+      openWa(OWNER_WA, "Booking " + b.id + " confirmed ✅\nName: " + v("cname") + "\nMobile: " + v("cmobile") + "\nPick-up: " + fmt(b.start) + "\nReturn: " + fmt(b.due) +
+        "\nRental: ₹" + b.rent + " | Token: ₹" + b.token + (bal2 !== "" ? " | Balance: ₹" + bal2 : "") + "\nI confirm the dates, amounts and token terms.");
+    });
+  }
+
+  function sheet(b, c) {
+    var bal = balance(b), sg = pad.url();
+    function r4(l1, v1, l2, v2) { return '<div class="l">' + l1 + '</div><div>' + esc(v1) + '</div><div class="l">' + l2 + '</div><div>' + esc(v2) + "</div>"; }
+    return '<div class="pg"><div class="band"></div><div class="ttl">PLAYVAULT</div><div class="tg">GAME ON. ANYWHERE. &nbsp;|&nbsp; PS5 GAMING RENTALS &nbsp;•&nbsp; VISAKHAPATNAM</div>' +
+      '<div class="agr"><b>BOOKING CONFIRMATION</b><span>Booking no. <b style="font-size:12px">' + esc(b.id) + "</b></span></div>" +
+      "<h3>BOOKING DETAILS</h3><div class=\"tb\">" + r4("Customer name", c.name, "Mobile number", c.mobile) + r4("Pick-up", fmt(b.start), "Return", fmt(b.due)) +
+      r4("Rental amount", rs(b.rent), "Token amount", rs(b.token)) + r4("Balance at pick-up", bal === "" ? "—" : rs(bal), "Refundable deposit", b.deposit ? rs(b.deposit) : "—") + "</div>" +
+      "<h3>TOKEN TERMS</h3><ul>" + termsList(b).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>" +
+      "<h3>CUSTOMER CONFIRMATION</h3><p class=\"note\">I confirm the dates and amounts above and accept the token terms. The rental agreement will be signed at pick-up.</p>" +
+      '<div class="tb"><div class="l" style="min-height:70px">Signature</div><div style="min-height:70px">' + (sg ? '<img class="sg" src="' + sg + '">' : "") + '</div><div class="l">Confirmed on</div><div>' + esc(fmt(localStr(new Date()))) + "</div></div>" +
+      '<div class="ft"><span>PLAYVAULT &nbsp;•&nbsp; WhatsApp: 9666880474 &nbsp;•&nbsp; ' + SITE + " &nbsp;•&nbsp; " + INSTA + "</span><span>Booking confirmation</span></div></div>";
+  }
+
+  async function make() {
+    if (!v("cname") || !v("cmobile")) { setStatus("Enter your name and mobile number.", "err"); (v("cname") ? $("cmobile") : $("cname")).focus(); return; }
+    if (!$("agree").checked) { setStatus("Tick the box to confirm the booking.", "err"); $("agree").scrollIntoView({ block: "center", behavior: "smooth" }); return; }
+    var btn = $("makeBtn"); btn.disabled = true; btn.textContent = "Creating…"; setStatus("Creating the PDF…", "");
+    try {
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      var w = $("sheetwrap"); w.innerHTML = sheet(B, { name: v("cname"), mobile: v("cmobile") });
+      var cv = await html2canvas(w.firstElementChild, { scale: 2, backgroundColor: "#ffffff", logging: false, useCORS: true, width: 794, height: 1123, windowWidth: 794 });
+      w.innerHTML = "";
+      var url = cv.toDataURL("image/jpeg", 0.92);
+      var pdf = new window.jspdf.jsPDF({ unit: "mm", format: "a4", compress: true });
+      pdf.addImage(url, "JPEG", 0, 0, 210, 297);
+      lastBlob = pdf.output("blob"); lastName = "PlayVault_Booking_" + (B.id || "confirmation") + ".pdf";
+      $("preview").innerHTML = '<img alt="Booking confirmation" src="' + url + '">';
+      $("afterCard").hidden = false; btn.textContent = "Share PDF";
+      setStatus("PDF ready. Tap Share PDF and send it to PlayVault on WhatsApp.", "ok");
+      $("afterCard").scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (e) { console.error(e); setStatus("Could not create the PDF. Try again.", "err"); btn.textContent = "Create PDF"; }
+    btn.disabled = false;
+  }
+
+  async function share() {
+    var file = new File([lastBlob], lastName, { type: "application/pdf" });
+    try {
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: "PlayVault Booking Confirmation" }); setStatus("Shared. Now tap the green button to notify PlayVault.", "ok"); return; }
+    } catch (e) { if (e && e.name === "AbortError") { setStatus("Cancelled.", ""); return; } }
+    var a = document.createElement("a"); a.href = URL.createObjectURL(lastBlob); a.download = lastName; document.body.appendChild(a); a.click(); a.remove();
+    setStatus("PDF downloaded. Send it to PlayVault on WhatsApp, then tap the green button.", "ok");
+  }
+
+  if (B && B.id) customerView(); else ownerView();
+})();
+</script>
+</body>
+</html>
