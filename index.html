@@ -477,9 +477,20 @@ if (priceSection && "IntersectionObserver" in window) {
 
   priceObserver.observe(priceSection);
 }
-// GTA 6 banner: count taps on Book
-var gtaHit = document.querySelector(".gta-hit");
-if (gtaHit) gtaHit.addEventListener("click", function () { if (window.gtag) gtag("event", "gta6_book_click"); });
+// Count taps on every key button
+document.addEventListener("click", function (e) {
+  var a = e.target.closest("a"); if (!a || !window.gtag) return;
+  var href = a.getAttribute("href") || "", name = null;
+  if (a.classList.contains("gta-hit")) name = "gta6_book_click";
+  else if (a.id === "sendwa") name = "booking_form_whatsapp_click";
+  else if (href.indexOf("wa.me") > -1) name = "whatsapp_click";
+  else if (href.indexOf("tel:") === 0) name = "call_click";
+  else if (a.classList.contains("game")) name = "game_click";
+  else if (a.classList.contains("btn-primary")) name = "rent_now_click";
+  if (!name) return;
+  var sec = a.closest("section, header, footer, .hero, .cta");
+  gtag("event", name, { button_text: (a.textContent || "").trim().slice(0, 40), section: sec ? (sec.id || sec.tagName.toLowerCase()) : "" });
+}, true);
 // GTA 6 banner intro
 var gtaBanner = document.querySelector(".gta-banner");
 if (gtaBanner && "IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
