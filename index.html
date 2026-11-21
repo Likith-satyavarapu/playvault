@@ -214,9 +214,9 @@ section { padding-block: clamp(40px, 7vw, 72px); border-top: 1px solid var(--lin
 .soon .btn { border-color: #fff; color: #fff; }
 .soon .big { font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: clamp(3rem, 12vw, 6.5rem); line-height: .85; text-align: right; color: rgba(255,255,255,.14); user-select: none; letter-spacing: -.03em; }
 @media (max-width: 640px) { .soon { grid-template-columns: 1fr; } .soon .big { text-align: left; } }
-  .gta-banner { position: relative; border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,.12); }
+.gta-banner { position: relative; border-radius: 22px; overflow: hidden; border: 1px solid rgba(255,255,255,.12); }
 .gta-banner img { display: block; width: 100%; height: auto; transform-origin: 0 0; will-change: transform; }
-.gta-hit { position: absolute; left: 61.5%; top: 75.5%; width: 32%; height: 9.5%; border-radius: 14px; }
+.gta-hit { position: absolute; left: 30%; top: 75%; width: 48%; height: 15%; border-radius: 14px; }
 .gta-banner.pre img { transform: scale(1.75); }
 .gta-banner.play img { transform: scale(1); transition: transform 2.5s cubic-bezier(.45,0,.2,1) .8s; }
 .gta-banner.pre .gta-hit { visibility: hidden; }
@@ -356,8 +356,11 @@ footer a:hover { color: var(--fg); }
 
 <section id="gta6">
   <div class="gta-banner">
-    <img src="images/gta6.PNG" alt="GTA 6 coming soon on PlayVault. Join the waitlist">
-    <a class="gta-hit" data-wa data-msg="Hi PlayVault, please add me to the GTA 6 waitlist." href="#booking" aria-label="Join the GTA 6 waitlist"></a>
+    <picture>
+      <source srcset="images/gta6-now-available.webp" type="image/webp">
+      <img src="images/gta6-now-available.jpg" width="1600" height="900" loading="lazy" decoding="async" alt="GTA 6 is now available. Play it now with PlayVault. Book your session. PS5 home rentals in Visakhapatnam.">
+    </picture>
+    <a class="gta-hit" data-wa data-msg="Hi PlayVault, I want to book a PS5 for GTA 6. Please share availability and price." href="#booking" aria-label="Book a PS5 for GTA 6 on WhatsApp"></a>
   </div>
 </section>
 
@@ -410,7 +413,7 @@ footer a:hover { color: var(--fg); }
   <nav aria-label="Footer">
     <a href="#top">Home</a><a href="#plans">Rent a PS5</a><a href="#games">Games</a><a href="#booking">My Booking</a><a href="#contact">Contact</a>
   </nav>
-  <a href="tel:+919666880474">📞 +91 96668 80474</a><span>© 2026 PlayVault. All rights reserved.</span>
+  <a href="tel:+919666880474">📞 +91 96668 80474</a><span>©️ 2026 PlayVault. All rights reserved.</span>
 </footer>
 
 <script>
@@ -474,6 +477,9 @@ if (priceSection && "IntersectionObserver" in window) {
 
   priceObserver.observe(priceSection);
 }
+// GTA 6 banner: count taps on Book
+var gtaHit = document.querySelector(".gta-hit");
+if (gtaHit) gtaHit.addEventListener("click", function () { if (window.gtag) gtag("event", "gta6_book_click"); });
 // GTA 6 banner intro
 var gtaBanner = document.querySelector(".gta-banner");
 if (gtaBanner && "IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
